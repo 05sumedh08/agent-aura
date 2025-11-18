@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # PostgreSQL Database
+  # ============================================================================
+  database:
+    image: postgres:15-alpine
+    container_name: agent-aura-db
+    environment:
+      POSTGRES_USER: agent_aura
+      POSTGRES_PASSWORD: agent_aura_password
+      POSTGRES_DB: agent_aura_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent_aura"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agent-aura-network
+    restart: unless-stopped
+
+  # ============================================================================
+  # FastAPI Backend Service
+  # ============================================================================
+  backend:
+    build:
+      context: ./agent-aura-backend
+      dockerfile: Dockerfile
+    container_name: agent-aura-backend
+    environment:
+      - DATABASE_URL=postgresql://agent_aura:agent_aura_password@database:5432/agent_aura_db
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data:ro
+      - ./output:/app/output
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - agent-aura-network
+    restart: unless-stopped
+
+  # ============================================================================
+  # Next.js Frontend Service
+  # ============================================================================
+  frontend:
+    build:
+      context: ./agent-aura-frontend
+      dockerfile: Dockerfile
+    container_name: agent-aura-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - agent-aura-network
+    restart: unless-stopped
+
+networks:
+  agent-aura-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local

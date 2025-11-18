@@ -1,0 +1,31 @@
+# Agent Aura Backend Dependencies (SQLite version for local testing)
+
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Database (SQLite - no PostgreSQL needed)
+sqlalchemy==2.0.23
+alembic==1.12.1
+
+# Authentication
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Data Processing
+pandas==2.1.3
+numpy==1.26.2
+
+# Environment
+python-dotenv==1.0.0
+
+# Google AI (for agent integration)
+google-generativeai==0.3.1
+
+# Async Support
+aiofiles==23.2.1
+
+# Validation
+pydantic==2.5.0
+email-validator==2.1.0

@@ -1,0 +1,29 @@
+# Agent Aura v2.0 Requirements
+# Python dependencies for multi-agent student intervention system
+
+# Core ADK framework
+google-adk==1.18.0
+
+# Data processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# API and configuration
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+
+# Testing
+pytest>=8.4.2
+pytest-asyncio==0.24.0
+
+# Code quality
+deprecated
+
+# Utilities
+tabulate
+tqdm
+scikit-learn
+
+# Optional: For enhanced functionality
+# matplotlib>=3.7.0  # For local visualizations
+# flask>=3.0.0  # For web dashboard

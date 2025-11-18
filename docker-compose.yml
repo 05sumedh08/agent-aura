@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Agent Aura Main Application
+  # ============================================================================
+  agent-aura:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: agent-aura
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - ORCHESTRATOR_MODEL=${ORCHESTRATOR_MODEL:-gemini-2.0-flash-exp}
+      - WORKER_MODEL=${WORKER_MODEL:-gemini-1.5-flash}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - ./data:/app/data:ro
+      - ./output:/app/output
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - agent-aura-network
+
+  # ============================================================================
+  # Optional: Monitoring with Prometheus (for production)
+  # ============================================================================
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: agent-aura-prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+  #     - prometheus-data:/prometheus
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #   networks:
+  #     - agent-aura-network
+
+  # ============================================================================
+  # Optional: Grafana Dashboard (for production)
+  # ============================================================================
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   container_name: agent-aura-grafana
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+  #   networks:
+  #     - agent-aura-network
+
+networks:
+  agent-aura-network:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:
