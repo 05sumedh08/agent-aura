@@ -1,0 +1,56 @@
+name: Deploy to Production
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  deploy-cloud-run:
+    name: Deploy to Google Cloud Run
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+    
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+    
+    - name: Build and push backend image
+      run: |
+        gcloud builds submit ./agent-aura-backend \
+          --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/agent-aura-backend:${{ github.sha }}
+    
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy agent-aura-backend \
+          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/agent-aura-backend:${{ github.sha }} \
+          --platform managed \
+          --region us-central1 \
+          --allow-unauthenticated \
+          --set-env-vars GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+    
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          ## Agent Aura Release
+          
+          ### Changes in this Release
+          - See commit history for details
+          
+          ### Deployment
+          - Backend deployed to Google Cloud Run
+          - Frontend available via Vercel
+        draft: false
+        prerelease: false

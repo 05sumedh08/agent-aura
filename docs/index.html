@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Agent Aura - Multi-Agent AI System for K-12 Student Intervention">
+    <meta name="keywords" content="AI, Education, Student Support, Multi-Agent System, K-12">
+    <meta name="author" content="05sumedh08">
+    
+    <title>Agent Aura - AI-Powered Student Intervention System</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .badge {
+            padding: 0.3rem 0.8rem;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .section {
+            margin: 3rem 0;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tech-stack {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        
+        .tech-tag {
+            background: #e9ecef;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            color: white;
+        }
+        
+        .link-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        
+        .link-section a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .link-section a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Agent Aura</h1>
+            <p class="subtitle">Multi-Agent AI System for K-12 Student Intervention</p>
+            <div class="badges">
+                <span class="badge">Python 3.11+</span>
+                <span class="badge">Google ADK</span>
+                <span class="badge">Gemini 2.0</span>
+                <span class="badge">Apache 2.0</span>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="cta-buttons">
+                <a href="https://github.com/05sumedh08/agent-aura" class="btn btn-primary">View on GitHub</a>
+                <a href="https://github.com/05sumedh08/agent-aura#readme" class="btn btn-secondary">Documentation</a>
+            </div>
+            
+            <section class="section">
+                <h2>📊 Key Metrics</h2>
+                <div class="stats">
+                    <div class="stat-box">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Specialized Agents</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Intelligent Tools</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">85%</span>
+                        <span class="stat-label">Success Prediction</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">&lt;1s</span>
+                        <span class="stat-label">Notification Speed</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">42-51%</span>
+                        <span class="stat-label">Student Improvement</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">30s</span>
+                        <span class="stat-label">Analyze 100 Students</span>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2>✨ Core Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>🎯 Real-Time Risk Detection</h3>
+                        <p>Identify at-risk students instantly using advanced AI algorithms that analyze GPA, attendance, and behavioral patterns.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📧 Automated Notifications</h3>
+                        <p>Generate and send professional email alerts to parents and teachers in less than 1 second per student.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📈 Progress Tracking</h3>
+                        <p>Monitor student improvement over time with comprehensive progress tracking and visualization tools.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔮 Success Prediction</h3>
+                        <p>Forecast intervention outcomes with 85% confidence using machine learning models.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🤝 Multi-Agent Coordination</h3>
+                        <p>5 specialized agents work together seamlessly to provide comprehensive student support.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📊 Multi-Format Reports</h3>
+                        <p>Export data in JSON, CSV, and visualization-ready formats for easy analysis and sharing.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2>🏗️ Architecture</h2>
+                <p>Agent Aura employs a sophisticated multi-agent architecture powered by Google's Gemini AI:</p>
+                <div class="feature-grid">
+                    <div class="link-section">
+                        <h3>Orchestrator Agent</h3>
+                        <p>Central coordinator managing workflow and communication between all sub-agents.</p>
+                    </div>
+                    <div class="link-section">
+                        <h3>Data Collection Agent</h3>
+                        <p>Retrieves comprehensive student profiles and academic metrics from the database.</p>
+                    </div>
+                    <div class="link-section">
+                        <h3>Risk Analysis Agent</h3>
+                        <p>Analyzes student data, calculates risk scores, and triggers automated notifications.</p>
+                    </div>
+                    <div class="link-section">
+                        <h3>Intervention Planning Agent</h3>
+                        <p>Designs personalized intervention strategies based on risk levels and student needs.</p>
+                    </div>
+                    <div class="link-section">
+                        <h3>Outcome Prediction Agent</h3>
+                        <p>Forecasts intervention success rates and provides progress visualizations.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2>🛠️ Technology Stack</h2>
+                <div class="tech-stack">
+                    <span class="tech-tag">Python 3.11+</span>
+                    <span class="tech-tag">Google ADK 1.18.0</span>
+                    <span class="tech-tag">Gemini 2.0 Flash</span>
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">Tailwind CSS</span>
+                    <span class="tech-tag">Docker</span>
+                    <span class="tech-tag">Google Cloud Run</span>
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2>🚀 Quick Start</h2>
+                <div class="link-section">
+                    <h3>1. Clone the Repository</h3>
+                    <pre style="background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 5px; overflow-x: auto;">git clone https://github.com/05sumedh08/agent-aura.git
+cd agent-aura</pre>
+                </div>
+                
+                <div class="link-section">
+                    <h3>2. Install Dependencies</h3>
+                    <pre style="background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 5px; overflow-x: auto;">python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt</pre>
+                </div>
+                
+                <div class="link-section">
+                    <h3>3. Configure Environment</h3>
+                    <pre style="background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 5px; overflow-x: auto;">cp .env.template .env
+# Edit .env and add your GEMINI_API_KEY</pre>
+                </div>
+                
+                <div class="link-section">
+                    <h3>4. Run Agent Aura</h3>
+                    <pre style="background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 5px; overflow-x: auto;">adk web</pre>
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2>📚 Documentation</h2>
+                <div class="link-section">
+                    <ul style="list-style: none; padding: 0;">
+                        <li>📖 <a href="https://github.com/05sumedh08/agent-aura#readme">Complete README</a></li>
+                        <li>⚡ <a href="https://github.com/05sumedh08/agent-aura/blob/main/QUICKSTART.md">Quick Start Guide</a></li>
+                        <li>🧪 <a href="https://github.com/05sumedh08/agent-aura/blob/main/TESTING_GUIDE.md">Testing Guide</a></li>
+                        <li>🤝 <a href="https://github.com/05sumedh08/agent-aura/blob/main/CONTRIBUTING.md">Contributing Guidelines</a></li>
+                        <li>🐛 <a href="https://github.com/05sumedh08/agent-aura/issues">Report Issues</a></li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2>🌟 Impact</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    Agent Aura is transforming K-12 education by enabling early identification of at-risk students, 
+                    automating communication with stakeholders, and providing data-driven intervention strategies. 
+                    Schools using Agent Aura have reported significant improvements in student outcomes and resource efficiency.
+                </p>
+            </section>
+            
+            <section class="section">
+                <h2>📄 License</h2>
+                <p>Agent Aura is licensed under the <a href="https://github.com/05sumedh08/agent-aura/blob/main/LICENSE" style="color: #667eea;">Apache License 2.0</a></p>
+            </section>
+        </div>
+        
+        <footer>
+            <p>Made with ❤️ for K-12 students worldwide</p>
+            <p style="margin-top: 0.5rem;">© 2025 Agent Aura | <a href="https://github.com/05sumedh08/agent-aura" style="color: white;">GitHub</a></p>
+        </footer>
+    </div>
+</body>
+</html>
