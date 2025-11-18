@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Aura - Student Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .students-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .filter-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .student-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .student-card.CRITICAL { border-color: #dc3545; }
+        .student-card.HIGH { border-color: #fd7e14; }
+        .student-card.MODERATE { border-color: #ffc107; }
+        .student-card.LOW { border-color: #28a745; }
+        
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .student-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .student-id {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .risk-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: white;
+        }
+        
+        .risk-badge.CRITICAL { background: #dc3545; }
+        .risk-badge.HIGH { background: #fd7e14; }
+        .risk-badge.MODERATE { background: #ffc107; color: #333; }
+        .risk-badge.LOW { background: #28a745; }
+        
+        .student-info {
+            display: grid;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #667eea;
+            font-size: 1.25rem;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Agent Aura - Student Dashboard</h1>
+            <p>Real-time student risk monitoring and intervention system</p>
+        </header>
+        
+        <div id="stats" class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgGPA">0.0</div>
+                <div class="stat-label">Average GPA</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgAttendance">0%</div>
+                <div class="stat-label">Average Attendance</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="criticalCount">0</div>
+                <div class="stat-label">Critical Risk</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="highCount">0</div>
+                <div class="stat-label">High Risk</div>
+            </div>
+        </div>
+        
+        <div class="students-container">
+            <h2 style="margin-bottom: 1rem; color: #333;">Student Risk Assessment</h2>
+            
+            <div class="filter-section">
+                <button class="filter-btn active" onclick="filterStudents('ALL')">All Students</button>
+                <button class="filter-btn" onclick="filterStudents('CRITICAL')">Critical</button>
+                <button class="filter-btn" onclick="filterStudents('HIGH')">High Risk</button>
+                <button class="filter-btn" onclick="filterStudents('MODERATE')">Moderate</button>
+                <button class="filter-btn" onclick="filterStudents('LOW')">Low Risk</button>
+            </div>
+            
+            <div id="loading" class="loading">
+                Loading student data...
+            </div>
+            
+            <div id="error" class="error" style="display: none;"></div>
+            
+            <div id="students" class="students-grid"></div>
+        </div>
+    </div>
+    
+    <script>
+        let allStudents = [];
+        let currentFilter = 'ALL';
+        
+        async function loadData() {
+            try {
+                // Load students
+                const studentsResponse = await fetch('http://localhost:5001/api/students');
+                allStudents = await studentsResponse.json();
+                
+                // Load stats
+                const statsResponse = await fetch('http://localhost:5001/api/stats');
+                const stats = await statsResponse.json();
+                
+                displayStats(stats);
+                displayStudents(allStudents);
+                
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').textContent = 
+                    'Error loading data. Make sure the server is running at http://localhost:5001';
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+        
+        function displayStats(stats) {
+            document.getElementById('totalStudents').textContent = stats.total_students;
+            document.getElementById('avgGPA').textContent = stats.average_gpa.toFixed(2);
+            document.getElementById('avgAttendance').textContent = 
+                (stats.average_attendance * 100).toFixed(0) + '%';
+            document.getElementById('criticalCount').textContent = stats.critical_count;
+            document.getElementById('highCount').textContent = stats.high_count;
+        }
+        
+        function displayStudents(students) {
+            const container = document.getElementById('students');
+            
+            // Filter students
+            const filtered = currentFilter === 'ALL' 
+                ? students 
+                : students.filter(s => s.risk_level === currentFilter);
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#666;">No students found for this filter.</p>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map(student => `
+                <div class="student-card ${student.risk_level}">
+                    <div class="student-header">
+                        <div>
+                            <div class="student-name">${student.name}</div>
+                            <div class="student-id">${student.student_id}</div>
+                        </div>
+                        <div class="risk-badge ${student.risk_level}">
+                            ${student.risk_level}
+                        </div>
+                    </div>
+                    
+                    <div class="student-info">
+                        <div class="info-row">
+                            <span class="info-label">Grade</span>
+                            <span class="info-value">${student.grade_level}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">GPA</span>
+                            <span class="info-value">${student.gpa.toFixed(2)}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Attendance</span>
+                            <span class="info-value">${(student.attendance_rate * 100).toFixed(0)}%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Performance</span>
+                            <span class="info-value">${student.overall_performance}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Risk Score</span>
+                            <span class="info-value">${(student.risk_score * 100).toFixed(0)}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${student.risk_score * 100}%; 
+                             background: ${getRiskColor(student.risk_level)}"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getRiskColor(level) {
+            const colors = {
+                'CRITICAL': '#dc3545',
+                'HIGH': '#fd7e14',
+                'MODERATE': '#ffc107',
+                'LOW': '#28a745'
+            };
+            return colors[level] || '#667eea';
+        }
+        
+        function filterStudents(filter) {
+            currentFilter = filter;
+            
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            displayStudents(allStudents);
+        }
+        
+        // Load data on page load
+        loadData();
+        
+        // Refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>
