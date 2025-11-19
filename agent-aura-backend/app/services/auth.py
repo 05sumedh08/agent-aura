@@ -9,7 +9,7 @@ JWT-based auth with role-based access control (RBAC).
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import hashlib
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -21,7 +21,6 @@ SECRET_KEY = "your-secret-key-change-in-production-use-env-variable"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
 
@@ -30,13 +29,14 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 # ============================================================================
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a password against its hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    """Verify a password against its hash (simple SHA256 for demo)."""
+    hashed_plain = hashlib.sha256(plain_password.encode()).hexdigest()
+    return hashed_plain == hashed_password
 
 
 def get_password_hash(password: str) -> str:
-    """Hash a password."""
-    return pwd_context.hash(password)
+    """Hash a password (simple SHA256 for demo)."""
+    return hashlib.sha256(password.encode()).hexdigest()
 
 
 # ============================================================================

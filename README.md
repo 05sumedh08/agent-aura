@@ -784,75 +784,82 @@ agent-aura/
 │   │   │   ├── agent.py
 │   │   │   └── tools.py
 │   │   ├── api/               # API endpoints
-│   │   │   └── __init__.py
 │   │   ├── models/            # Database models
-│   │   │   ├── database.py
-│   │   │   └── database_production.py
-│   │   ├── middleware/        # Middleware
-│   │   │   └── rate_limit.py
+│   │   ├── middleware/        # Rate limiting & CORS
 │   │   └── services/          # Business logic
-│   │       ├── auth.py
-│   │       └── ...
-│   ├── scripts/
-│   │   └── migrate_to_postgresql.py  # DB migration
-│   ├── requirements.txt
-│   ├── requirements-production.txt
-│   ├── run-backend.ps1
+│   ├── scripts/               # Utility scripts
+│   ├── .env.template          # Environment template
+│   ├── run-backend.ps1        # Start script
 │   └── Dockerfile
 │
 ├── agent-aura-frontend/        # Next.js Frontend
-│   ├── app/
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
+│   ├── app/                   # App router pages
 │   │   ├── login/             # Authentication
-│   │   │   └── page.tsx
 │   │   └── admin/             # Protected routes
 │   │       ├── agent/         # Agent control panel
-│   │       ├── students/      # Student list
+│   │       ├── students/      # Student management
 │   │       ├── teachers/      # Teacher dashboard
-│   │       ├── analytics/     # System analytics
-│   │       └── settings/      # Configuration
+│   │       ├── analytics/     # Real-time analytics
+│   │       └── settings/      # System configuration
 │   ├── components/            # React components
-│   │   ├── EventCard.tsx      # Glass Box events
-│   │   ├── SessionView.tsx
-│   │   ├── TrajectoryView.tsx
-│   │   └── ...
-│   ├── lib/                   # Utilities
-│   │   ├── api.ts             # API client
-│   │   ├── store.ts           # Zustand state
-│   │   └── types.ts
+│   ├── lib/                   # API client & utilities
 │   ├── package.json
-│   ├── next.config.js
-│   └── tsconfig.json
+│   └── next.config.js
 │
 ├── chrome-extension/           # Chrome Extension
-│   ├── manifest.json          # Extension config
-│   ├── popup.html             # Popup UI
-│   ├── popup.js               # Popup logic
-│   ├── content.js             # Content script
-│   ├── content.css            # Injected styles
+│   ├── manifest.json          # Extension config (v3)
+│   ├── popup.html/js          # Popup interface
+│   ├── content.js/css         # Page injection
 │   ├── background.js          # Service worker
-│   ├── icons/                 # Extension icons
-│   └── README.md
+│   └── icons/                 # Extension icons
 │
-├── data/                       # Data files
-│   └── student_data.csv
+├── agent_aura/                 # Core Agent Package
+│   ├── agent.py               # Main agent logic
+│   ├── cli.py                 # Command-line interface
+│   ├── tools.py               # Agent tools
+│   └── sub_agents/            # Specialized agents
 │
 ├── docs/                       # Documentation
-│   ├── _config.yml
-│   └── index.html
+│   ├── deployment/            # Deployment guides (2 files)
+│   │   ├── PRODUCTION_DEPLOYMENT.md
+│   │   └── INSTALLATION_COMPLETE.md
+│   ├── guides/                # Testing & analysis (5 files)
+│   │   ├── SYSTEM_TEST_REPORT.md
+│   │   ├── TESTING_GUIDE.md
+│   │   └── ...
+│   ├── guides-archive/        # Historical docs (14 files)
+│   └── REPOSITORY_STATUS.md   # Current status
 │
-├── tests/                      # Test suite
-│   └── test_integration.py
+├── requirements/               # Python Dependencies
+│   ├── requirements.txt       # Backend (full)
+│   ├── requirements-production.txt
+│   ├── requirements-minimal.txt
+│   ├── requirements-local.txt
+│   ├── requirements-root.txt  # Root/CLI
+│   └── README.md              # Installation guide
 │
-├── .env.production.template    # Production config template
-├── PRODUCTION_DEPLOYMENT.md    # Deployment guide
-├── SYSTEM_TEST_REPORT.md       # Test results
+├── tests/                      # Test Suite
+│   ├── test_integration.py
+│   └── archive/               # Test scripts
+│
+├── data/                       # Sample data
+│   └── student_data.csv
+│
+├── .env.template               # Root environment template
+├── .gitignore                  # Git exclusions
+├── docker-compose.yml          # Docker setup
 ├── START_ALL.ps1               # Quick start script
-├── requirements.txt
 ├── README.md                   # This file
-└── LICENSE
+└── LICENSE                     # Apache 2.0
 ```
+
+**Key Folders:**
+- `agent-aura-backend/` - Backend API (FastAPI + SQLite/PostgreSQL)
+- `agent-aura-frontend/` - Web UI (Next.js + React)
+- `chrome-extension/` - Browser integration
+- `docs/` - All documentation (deployment, testing, guides)
+- `requirements/` - Python dependencies organized by use case
+- `tests/` - Integration and unit tests
 
 ---
 

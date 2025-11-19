@@ -87,7 +87,9 @@ export default function LoginPage() {
             </label>
             <input
               id="username"
+              name="username"
               type="text"
+              autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-3 rounded-xl glass border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-aura-primary"
@@ -105,7 +107,9 @@ export default function LoginPage() {
             </label>
             <input
               id="password"
+              name="password"
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 rounded-xl glass border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-aura-primary"
@@ -156,7 +160,7 @@ export default function LoginPage() {
           <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
             <p>Admin: admin / admin123</p>
             <p>Teacher: teacher1 / teacher123</p>
-            <p>Student: STU001 / student123</p>
+            <p>Student: student1 / student1123</p>
           </div>
         </div>
       </div>

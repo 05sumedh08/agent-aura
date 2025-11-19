@@ -8,9 +8,18 @@ Implements the Think-Act-Observe loop with Glass Box trajectory streaming.
 
 import json
 import asyncio
+import os
 from typing import AsyncGenerator, Dict, List, Optional, Any
 from datetime import datetime
 from dataclasses import dataclass, asdict
+
+# Lazy import for Gemini API to avoid import errors
+try:
+    import google.generativeai as genai
+    GEMINI_AVAILABLE = True
+except Exception as e:
+    GEMINI_AVAILABLE = False
+    genai = None
 
 from app.agent_core.tools import (
     get_student_data,
@@ -144,6 +153,35 @@ class Agent:
         self.tools = tools or list(TOOL_REGISTRY.keys())
         self.max_iterations = 10
         self.session_history = []
+        self.model = None
+        self._gemini_initialized = False
+        
+    def _initialize_gemini(self):
+        """Initialize Gemini API lazily when first needed."""
+        if self._gemini_initialized:
+            return
+            
+        if not GEMINI_AVAILABLE:
+            raise RuntimeError("Google GenerativeAI package not available. Please check Python version compatibility.")
+        
+        # Load API key
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            # Try to load .env explicitly if not found
+            from dotenv import load_dotenv
+            from pathlib import Path
+            backend_dir = Path(__file__).parent.parent.parent
+            env_path = backend_dir / ".env"
+            load_dotenv(dotenv_path=env_path)
+            api_key = os.getenv("GEMINI_API_KEY")
+            
+            if not api_key:
+                raise ValueError(f"GEMINI_API_KEY environment variable not set. Tried loading from: {env_path}")
+        
+        genai.configure(api_key=api_key)
+        model_name = os.getenv("ORCHESTRATOR_MODEL", "gemini-2.0-flash-exp")
+        self.model = genai.GenerativeModel(model_name)
+        self._gemini_initialized = True
     
     def _prepare_context(self, goal: str, session_history: List[dict]) -> str:
         """
@@ -322,32 +360,33 @@ Available Tools:
     
     async def _simulate_llm_call(self, context: str) -> dict:
         """
-        Simulate LLM reasoning (placeholder for actual Gemini API call).
-        
-        In production, this would call the Gemini API with the context.
-        For now, we'll create a simple rule-based response.
+        Call Gemini API to generate next reasoning step.
         
         Args:
-            context: Prepared context string
+            context: Prepared context string with tools and history
             
         Returns:
-            Parsed LLM response
+            Parsed LLM response with thought/action/final_response
         """
-        # Simple keyword-based routing for demonstration
-        if "analyze" in context.lower() and "student" in context.lower():
-            # Extract student ID from context
-            import re
-            match = re.search(r'S\d{3}', context)
-            if match:
-                student_id = match.group(0)
-                return {
-                    "thought": f"I need to analyze the risk level for student {student_id}. First, I'll get their data.",
-                    "action": "get_student_data",
-                    "arguments": {"student_id": student_id, "data_source": "./data/student_data.csv"}
-                }
-        
-        # Default response
-        return {
-            "thought": "I understand you want help with student intervention analysis.",
-            "final_response": "Agent Aura is ready. Please provide a specific student ID (e.g., S001) to analyze risk levels and generate interventions."
-        }
+        try:
+            # Initialize Gemini if not already done
+            self._initialize_gemini()
+            
+            # Call Gemini API
+            response = await asyncio.to_thread(
+                self.model.generate_content,
+                context
+            )
+            
+            # Extract text from response
+            response_text = response.text.strip()
+            
+            # Parse the response
+            return self._parse_llm_response(response_text)
+            
+        except Exception as e:
+            # Fallback on error
+            return {
+                "thought": f"Error calling Gemini API: {str(e)}",
+                "final_response": f"I encountered an error: {str(e)}. Please try again."
+            }

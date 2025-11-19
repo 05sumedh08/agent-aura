@@ -1,8 +1,9 @@
 'use client';
 
 import { StreamEvent } from '@/lib/types';
-import { Brain, Play, Eye, CheckCircle } from 'lucide-react';
+import { Brain, Play, Eye, CheckCircle, Users, AlertTriangle, Target, TrendingUp, Zap } from 'lucide-react';
 import { format } from 'date-fns';
+import ReactMarkdown from 'react-markdown';
 
 interface EventCardProps {
   event: StreamEvent;
@@ -11,6 +12,19 @@ interface EventCardProps {
 
 export default function EventCard({ event, index }: EventCardProps) {
   const getIcon = () => {
+    // Multi-agent events
+    if (event.type === 'agent_start' || event.type === 'agent_complete') {
+      const agentName = (event as any).agent_name || '';
+      if (agentName.includes('Data Collection')) return <Users className="w-5 h-5 text-blue-500" />;
+      if (agentName.includes('Risk Analysis')) return <AlertTriangle className="w-5 h-5 text-orange-500" />;
+      if (agentName.includes('Intervention')) return <Target className="w-5 h-5 text-green-500" />;
+      if (agentName.includes('Outcome')) return <TrendingUp className="w-5 h-5 text-purple-500" />;
+    }
+    
+    if (event.type === 'orchestrator_thought') return <Zap className="w-5 h-5 text-yellow-500" />;
+    if (event.type === 'final_report') return <CheckCircle className="w-5 h-5 text-indigo-500" />;
+    
+    // Original event types
     switch (event.type) {
       case 'thought':
         return <Brain className="w-5 h-5 text-purple-500" />;
@@ -26,6 +40,13 @@ export default function EventCard({ event, index }: EventCardProps) {
   };
 
   const getColor = () => {
+    // Multi-agent events
+    if (event.type === 'agent_start') return 'from-cyan-500/20 to-blue-600/20 border-cyan-500/30';
+    if (event.type === 'agent_complete') return 'from-emerald-500/20 to-green-600/20 border-emerald-500/30';
+    if (event.type === 'orchestrator_thought') return 'from-yellow-500/20 to-amber-600/20 border-yellow-500/30';
+    if (event.type === 'final_report') return 'from-indigo-500/20 via-purple-500/20 to-pink-500/20 border-indigo-500/30';
+    
+    // Original event types
     switch (event.type) {
       case 'thought':
         return 'from-purple-500/20 to-purple-600/20 border-purple-500/30';
@@ -41,6 +62,13 @@ export default function EventCard({ event, index }: EventCardProps) {
   };
 
   const getTitle = () => {
+    // Multi-agent events
+    if (event.type === 'agent_start') return `🚀 ${(event as any).agent_name || 'Agent'} Starting`;
+    if (event.type === 'agent_complete') return `✅ ${(event as any).agent_name || 'Agent'} Complete`;
+    if (event.type === 'orchestrator_thought') return '🧠 Orchestrator';
+    if (event.type === 'final_report') return '📊 Comprehensive Report';
+    
+    // Original event types
     switch (event.type) {
       case 'thought':
         return 'Thinking';
@@ -69,7 +97,13 @@ export default function EventCard({ event, index }: EventCardProps) {
               {getTitle()}
             </h3>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              {format(new Date(event.timestamp), 'HH:mm:ss')}
+              {event.timestamp ? (() => {
+                try {
+                  return format(new Date(event.timestamp), 'HH:mm:ss');
+                } catch {
+                  return event.timestamp;
+                }
+              })() : 'N/A'}
             </p>
           </div>
         </div>
@@ -80,6 +114,46 @@ export default function EventCard({ event, index }: EventCardProps) {
 
       {/* Content */}
       <div className="space-y-3">
+        {/* Agent Start Event */}
+        {event.type === 'agent_start' && (
+          <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl p-4">
+            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+              {(event as any).description || 'Agent starting execution...'}
+            </p>
+          </div>
+        )}
+
+        {/* Agent Complete Event */}
+        {event.type === 'agent_complete' && (
+          <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl p-4">
+            <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
+              Result:
+            </p>
+            <pre className="text-xs text-gray-700 dark:text-gray-300 overflow-x-auto max-h-64 overflow-y-auto">
+              {JSON.stringify((event as any).result, null, 2)}
+            </pre>
+          </div>
+        )}
+
+        {/* Orchestrator Thought */}
+        {event.type === 'orchestrator_thought' && event.content && (
+          <div className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-xl p-4">
+            <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-medium">
+              {event.content}
+            </p>
+          </div>
+        )}
+
+        {/* Final Report */}
+        {event.type === 'final_report' && event.content && (
+          <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/30 dark:via-purple-900/30 dark:to-pink-900/30 rounded-xl p-6">
+            <div className="prose prose-sm dark:prose-invert max-w-none">
+              <ReactMarkdown>{event.content}</ReactMarkdown>
+            </div>
+          </div>
+        )}
+        
+        {/* Original event types */}
         {event.type === 'thought' && event.content && (
           <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl p-4">
             <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">

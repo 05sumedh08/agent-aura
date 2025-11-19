@@ -3,7 +3,7 @@
 import { RiskBadgeProps } from '@/lib/types';
 import { AlertTriangle } from 'lucide-react';
 
-export default function RiskBadge({ level, score }: RiskBadgeProps) {
+export default function RiskBadge({ level, score, size = 'md' }: RiskBadgeProps) {
   const getColor = () => {
     switch (level) {
       case 'CRITICAL':
@@ -30,12 +30,23 @@ export default function RiskBadge({ level, score }: RiskBadgeProps) {
     }
   };
 
+  const getSizeClasses = () => {
+    switch (size) {
+      case 'sm':
+        return 'px-2 py-1 text-xs';
+      case 'lg':
+        return 'px-4 py-2 text-base';
+      default:
+        return 'px-3 py-1.5 text-sm';
+    }
+  };
+
   return (
     <div
-      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 font-semibold text-sm ${getColor()}`}
+      className={`inline-flex items-center gap-2 ${getSizeClasses()} rounded-lg border-2 font-semibold ${getColor()}`}
     >
       {(level === 'CRITICAL' || level === 'HIGH') && (
-        <AlertTriangle className="w-4 h-4" />
+        <AlertTriangle className={size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'} />
       )}
       <span>
         {level} {getIntensity()}

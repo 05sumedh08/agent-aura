@@ -77,16 +77,31 @@ agent-aura-backend/.env.template     # Safe placeholder template
 ```
 agent-aura/
 ├── docs/
-│   ├── deployment/
+│   ├── deployment/                       # Deployment documentation (2 files)
 │   │   ├── PRODUCTION_DEPLOYMENT.md      # Complete deployment guide
 │   │   └── INSTALLATION_COMPLETE.md      # Installation walkthrough
-│   ├── guides/
+│   ├── guides/                           # Testing & analysis (5 files)
 │   │   ├── SYSTEM_TEST_REPORT.md         # Test results (Grade: A-)
 │   │   ├── TESTING_GUIDE.md              # Testing procedures
 │   │   ├── TEST_RESULTS.md               # Detailed test results
 │   │   ├── ANALYSIS_AND_TESTING_REPORT.md
 │   │   └── WORKING_DEMONSTRATION.md      # Demo guide
+│   ├── guides-archive/                   # Historical documentation (14 files)
+│   │   ├── BACKEND_COMPLETE.md
+│   │   ├── FRONTEND_COMPLETE.md
+│   │   ├── QUICKSTART.md
+│   │   ├── TROUBLESHOOTING_GUIDE.md
+│   │   ├── CONTRIBUTING.md
+│   │   └── ...
 │   └── REPOSITORY_STATUS.md              # This file
+│
+├── requirements/                         # Python dependencies (6 files)
+│   ├── requirements.txt                  # Backend (full)
+│   ├── requirements-production.txt       # Production optimized
+│   ├── requirements-minimal.txt          # Lightweight
+│   ├── requirements-local.txt            # Development
+│   ├── requirements-root.txt             # Root/CLI
+│   └── README.md                         # Installation guide
 │
 ├── agent-aura-backend/
 │   ├── .env.template                     # Safe environment template
@@ -96,21 +111,33 @@ agent-aura/
 │   │   ├── api/                          # API endpoints
 │   │   ├── models/                       # Database models
 │   │   └── services/                     # Business logic
-│   └── requirements.txt                  # Python dependencies
+│   └── scripts/                          # Utility scripts
 │
 ├── agent-aura-frontend/
 │   ├── app/                              # Next.js pages
 │   ├── components/                       # React components
 │   └── lib/                              # Utilities and types
 │
+├── chrome-extension/                     # Browser extension
+│
 ├── agent_aura/                           # Core agent package
 ├── data/                                 # Sample data (student_data.csv)
 ├── tests/                                # Test suite
+│   ├── test_integration.py
+│   └── archive/                          # Test scripts
+│
 ├── README.md                             # Main documentation
-├── CONTRIBUTING.md                       # Contribution guidelines
 ├── LICENSE                               # Apache 2.0 License
-└── requirements.txt                      # Root dependencies
+├── .gitignore                            # Git exclusions
+└── docker-compose.yml                    # Docker setup
 ```
+
+**Organization Improvements (November 2024):**
+- ✅ All guides consolidated in `docs/guides-archive/` (14 files)
+- ✅ All requirements files in `requirements/` folder (6 files)
+- ✅ Test scripts organized in `tests/archive/`
+- ✅ Clean root directory with only essential files
+- ✅ Clear documentation hierarchy
 
 ## 🚀 Quick Start for New Users
 

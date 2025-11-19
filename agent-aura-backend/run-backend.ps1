@@ -4,8 +4,8 @@ Write-Host "Starting Agent Aura Backend..." -ForegroundColor Green
 # Activate virtual environment
 & S:/Courses/Kaggle/Agent_Aura_GIT/.venv/Scripts/Activate.ps1
 
-# Set environment variables
-$env:DATABASE_URL = "postgresql://agent_aura:agent_aura_password@localhost:5432/agent_aura_db"
+# Set environment variables (SQLite for local development)
+$env:DATABASE_URL = "sqlite:///./agent_aura_local.db"
 $env:SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 
 # Change to backend directory

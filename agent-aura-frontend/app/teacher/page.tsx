@@ -8,9 +8,9 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import StudentCard from '@/components/StudentCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Users, AlertTriangle, TrendingUp, GraduationCap } from 'lucide-react';
+import { Users, AlertTriangle, BookOpen, Award } from 'lucide-react';
 
-export default function AdminDashboard() {
+export default function TeacherDashboard() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
   const { students, setStudents, setSelectedStudent } = useStudents();
@@ -23,8 +23,8 @@ export default function AdminDashboard() {
       return;
     }
 
-    if (user?.role !== 'admin') {
-      router.push(`/${user?.role}`);
+    if (user?.role !== 'teacher') {
+      router.push(`/${user?.role || 'login'}`);
       return;
     }
 
@@ -33,9 +33,7 @@ export default function AdminDashboard() {
 
   const loadStudents = async () => {
     try {
-      const response = await apiClient.getStudents();
-      // Handle both array and {students: []} response formats
-      const data = Array.isArray(response) ? response : (response as any).students || [];
+      const data = await apiClient.getStudents();
       setStudents(data);
     } catch (error) {
       console.error('Failed to load students:', error);
@@ -46,11 +44,14 @@ export default function AdminDashboard() {
 
   const stats = {
     total: students.length,
-    critical: students.filter(s => s.latest_risk?.risk_level === 'CRITICAL').length,
-    high: students.filter(s => s.latest_risk?.risk_level === 'HIGH').length,
+    atRisk: students.filter(s => 
+      s.latest_risk?.risk_level === 'CRITICAL' || 
+      s.latest_risk?.risk_level === 'HIGH'
+    ).length,
     avgGPA: students.length > 0 
       ? (students.reduce((sum, s) => sum + s.gpa, 0) / students.length).toFixed(2)
       : '0.00',
+    lowAttendance: students.filter(s => s.attendance < 90).length,
   };
 
   if (isLoading) {
@@ -73,10 +74,10 @@ export default function AdminDashboard() {
             {/* Page Header */}
             <div className="glass rounded-3xl p-6">
               <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
-                Admin Dashboard
+                Teacher Dashboard
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Monitor all students and system-wide metrics
+                Welcome back, {user?.full_name || 'Teacher'}
               </p>
             </div>
 
@@ -86,14 +87,14 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between mb-4">
                   <Users className="w-8 h-8 text-blue-500" />
                   <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
-                    TOTAL
+                    MY STUDENTS
                   </span>
                 </div>
                 <div className="text-3xl font-bold text-gray-800 dark:text-white">
                   {stats.total}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Students
+                  In Your Classes
                 </div>
               </div>
 
@@ -101,35 +102,20 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between mb-4">
                   <AlertTriangle className="w-8 h-8 text-red-500" />
                   <span className="text-xs font-semibold text-red-600 dark:text-red-400">
-                    CRITICAL
+                    AT RISK
                   </span>
                 </div>
                 <div className="text-3xl font-bold text-gray-800 dark:text-white">
-                  {stats.critical}
+                  {stats.atRisk}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  At-Risk Students
-                </div>
-              </div>
-
-              <div className="glass rounded-2xl p-6 border border-orange-500/30 bg-gradient-to-br from-orange-500/10 to-yellow-500/10">
-                <div className="flex items-center justify-between mb-4">
-                  <TrendingUp className="w-8 h-8 text-orange-500" />
-                  <span className="text-xs font-semibold text-orange-600 dark:text-orange-400">
-                    HIGH RISK
-                  </span>
-                </div>
-                <div className="text-3xl font-bold text-gray-800 dark:text-white">
-                  {stats.high}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Need Attention
+                  Need Intervention
                 </div>
               </div>
 
               <div className="glass rounded-2xl p-6 border border-green-500/30 bg-gradient-to-br from-green-500/10 to-emerald-500/10">
                 <div className="flex items-center justify-between mb-4">
-                  <GraduationCap className="w-8 h-8 text-green-500" />
+                  <Award className="w-8 h-8 text-green-500" />
                   <span className="text-xs font-semibold text-green-600 dark:text-green-400">
                     AVG GPA
                   </span>
@@ -138,22 +124,58 @@ export default function AdminDashboard() {
                   {stats.avgGPA}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Overall Performance
+                  Class Average
                 </div>
+              </div>
+
+              <div className="glass rounded-2xl p-6 border border-orange-500/30 bg-gradient-to-br from-orange-500/10 to-yellow-500/10">
+                <div className="flex items-center justify-between mb-4">
+                  <BookOpen className="w-8 h-8 text-orange-500" />
+                  <span className="text-xs font-semibold text-orange-600 dark:text-orange-400">
+                    ATTENDANCE
+                  </span>
+                </div>
+                <div className="text-3xl font-bold text-gray-800 dark:text-white">
+                  {stats.lowAttendance}
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  Below 90%
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="glass rounded-3xl p-6">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                Quick Actions
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => router.push('/admin/agent')}
+                  className="px-6 py-3 bg-gradient-to-r from-aura-primary to-aura-secondary text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+                >
+                  🤖 Run AI Analysis
+                </button>
+                <button
+                  onClick={() => loadStudents()}
+                  className="px-6 py-3 glass border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white font-semibold rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                  🔄 Refresh Data
+                </button>
               </div>
             </div>
 
             {/* Students List */}
             <div className="glass rounded-3xl p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
-                All Students ({students.length})
+                My Students ({students.length})
               </h2>
               
               {students.length === 0 ? (
                 <div className="text-center py-12">
                   <Users className="w-16 h-16 mx-auto mb-4 text-gray-400 opacity-50" />
                   <p className="text-gray-600 dark:text-gray-400">
-                    No students found
+                    No students assigned to your classes
                   </p>
                 </div>
               ) : (
@@ -164,7 +186,7 @@ export default function AdminDashboard() {
                       student={student}
                       onClick={() => {
                         setSelectedStudent(student);
-                        router.push(`/admin/students/${student.student_id}`);
+                        router.push(`/teacher/students/${student.student_id}`);
                       }}
                     />
                   ))}
