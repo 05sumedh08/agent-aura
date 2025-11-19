@@ -1392,7 +1392,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 ### Connect
 
 - **GitHub:** [@05sumedh08](https://github.com/05sumedh08)
-- **LinkedIn:** Connect with Sumedh Gurchal
+- **LinkedIn:**www.linkedin.com/in/sumedh-g-250490300
 - **Email:** sumedhgurchal358@gmail.com
 
 ---
