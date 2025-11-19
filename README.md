@@ -1,32 +1,34 @@
-# 🤖 Agent Aura v2.0
+# 🤖 Agent Aura v2.0 - Production Ready
 
-**Multi-Agent AI System for K-12 Student Intervention**
+**Enterprise Multi-Agent AI System for K-12 Student Intervention**
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Google ADK](https://img.shields.io/badge/Google-ADK%201.18.0-green.svg)](https://github.com/google/adk-python)
-[![Gemini](https://img.shields.io/badge/Gemini-2.0%20Flash-orange.svg)](https://deepmind.google/technologies/gemini/)
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-14.0-black.svg)](https://nextjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue.svg)](https://www.postgresql.org/)
+[![Production](https://img.shields.io/badge/Production-Ready-success.svg)](PRODUCTION_DEPLOYMENT.md)
 
-> **Kaggle Agents Intensive - Capstone Project Submission**  
-> Transforming K-12 education through intelligent, automated student support
+> **Full-Stack Multi-Agent System with Enterprise Features**  
+> 🚀 Multi-agent orchestration | 📊 Real-time analytics | 🔒 Production security | 🌐 Chrome extension integration
 
 ---
 
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
+- [What's New in v2.0](#-whats-new-in-v20)
 - [Problem Statement](#-problem-statement)
 - [Solution Architecture](#-solution-architecture)
 - [Key Features](#-key-features)
-- [Installation](#-installation)
 - [Quick Start](#-quick-start)
 - [Multi-Agent System](#-multi-agent-system)
-- [Tool Ecosystem](#-tool-ecosystem)
-- [Usage Examples](#-usage-examples)
+- [Full-Stack Application](#-full-stack-application)
+- [Chrome Extension](#-chrome-extension)
+- [Production Deployment](#-production-deployment)
 - [Project Structure](#-project-structure)
 - [Configuration](#-configuration)
-- [Deployment](#-deployment)
-- [Evaluation & Testing](#-evaluation--testing)
+- [Testing](#-testing)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -34,19 +36,56 @@
 
 ## 🎯 Overview
 
-**Agent Aura** is a sophisticated multi-agent AI system powered by Google Gemini that intelligently identifies at-risk K-12 students, generates automated notifications for parents and teachers, and tracks intervention effectiveness with measurable outcomes.
+**Agent Aura** is an enterprise-grade, full-stack multi-agent AI system that transforms K-12 education through intelligent student support. Built with FastAPI, Next.js, and PostgreSQL, it features real-time analytics dashboards, automated notifications, and seamless integration with existing school management systems via Chrome extension.
 
 ### Quick Facts
 
 | Metric | Value |
 |--------|-------|
-| **Multi-Agent System** | 5 specialized agents |
-| **Total Tools** | 8 (4 foundation + 4 enhanced) |
-| **Analysis Speed** | 100 students in ~30 seconds |
+| **Architecture** | Full-stack (Backend + Frontend + Extension) |
+| **Multi-Agent System** | 4 specialized agents (parallel execution) |
+| **Database** | PostgreSQL (production), SQLite (development) |
+| **Analysis Speed** | Real-time with asyncio parallelism |
 | **Notification Speed** | <1 second per student |
 | **Success Prediction** | 85% confidence level |
 | **Average Improvement** | 42-51% across students |
-| **Export Formats** | 4 (JSON, CSV, Notifications, Timeline) |
+| **Production Features** | SSL/HTTPS, Rate Limiting, Redis Caching |
+| **Browser Integration** | Chrome extension for 6+ school systems |
+
+## 🆕 What's New in v2.0
+
+### 🎨 Full-Stack Application
+- **FastAPI Backend** (Python 3.10+) - High-performance async API with multi-agent orchestration
+- **Next.js Frontend** (React, TypeScript) - Modern dashboard with real-time streaming
+- **PostgreSQL Database** - Production-grade data storage with connection pooling
+- **JWT Authentication** - Secure user management with role-based access
+- **Real-time Streaming** - Server-Sent Events (SSE) for live agent updates
+
+### 🚀 Multi-Agent Orchestration
+- **4 Specialized Agents** working in parallel using `asyncio.gather()`
+- **Glass Box Trajectory** - Full visibility into agent reasoning and decisions
+- **Admin Controls** - Enable/disable individual agents on the fly
+- **Session Management** - Track analysis history with searchable sessions
+
+### 📊 Interactive Dashboards
+- **Teacher Dashboard** - Class statistics, risk distribution, student table
+- **Analytics Dashboard** - System-wide metrics with interactive charts
+- **Student Dashboard** - Individual student profiles and history
+- **Admin Panel** - Agent configuration and system controls
+
+### 🌐 Chrome Extension
+- **School System Integration** - Works with Schoology, Canvas, Blackboard, Moodle, PowerSchool
+- **One-Click Analysis** - Analyze students directly from school management pages
+- **Auto-Sync** - Automatic data synchronization at configurable intervals
+- **Risk Indicators** - Visual overlays showing student risk levels
+
+### 🔒 Production Ready
+- **PostgreSQL Migration** - Automated migration from SQLite
+- **Rate Limiting** - Per-user and global rate limits with Redis
+- **SSL/HTTPS** - Full TLS support with automatic certificate renewal
+- **Security Headers** - HSTS, CSP, X-Frame-Options, XSS Protection
+- **Monitoring** - Sentry integration for error tracking
+- **Backups** - Automated daily database backups
 
 ---
 
@@ -210,98 +249,353 @@ cp .env.template .env
 python -c "import google.adk; print('ADK Version:', google.adk.__version__)"
 ```
 
----
-
 ## ⚡ Quick Start
 
-### Using ADK Web UI (Recommended for Testing)
+### Option 1: Full Application (Recommended)
+
+```powershell
+# Start everything (backend + frontend)
+.\START_ALL.ps1
+
+# Backend will run on http://localhost:8000
+# Frontend will run on http://localhost:3000
+# Open http://localhost:3000 in your browser
+```
+
+### Option 2: Backend Only
+
+```powershell
+# Start backend API
+.\start-backend.ps1
+
+# Visit http://localhost:8000/docs for API documentation
+```
+
+### Option 3: Docker (Coming Soon)
 
 ```bash
-adk web
+docker-compose up -d
 ```
 
-Then open your browser to `http://localhost:8000` and interact with Agent Aura.
+### First Login
 
-### Using Python API
+1. Open http://localhost:3000
+2. Use default credentials:
+   - **Username**: `admin`
+   - **Password**: `admin123`
+3. Navigate to Admin > Agent page to start analysis
 
-```python
-from agent_aura import root_agent
-from google.adk.sessions import InMemorySessionService
-
-# Initialize session
-session_service = InMemorySessionService()
-session_id = session_service.create_session(root_agent)
-
-# Analyze a student
-response = session_service.send_message(
-    session_id=session_id,
-    message="Analyze student S001"
-)
-
-print(response.text)
-```
-
-### Command Line Usage
+### Quick Demo
 
 ```bash
-# Analyze single student
-python -m agent_aura.cli analyze --student-id S001
-
-# Analyze multiple students
-python -m agent_aura.cli analyze --student-ids S001,S002,S003
-
-# Batch process all students
-python -m agent_aura.cli batch --data-file data/student_data.csv
-
-# Export reports
-python -m agent_aura.cli export --format json --output output/report.json
+# Run demo script
+python demo_agent_aura.py
 ```
-
----
 
 ## 🤖 Multi-Agent System
 
-### Orchestrator Agent
+### Architecture
 
-**Model:** Gemini 2.0 Flash Exp  
-**Role:** Central coordinator
-
-```python
-orchestrator_agent = Agent(
-    name="orchestrator_agent",
-    model="gemini-2.0-flash-exp",
-    description="Primary coordinator for Agent Aura",
-    sub_agents=[
-        data_collection_agent,
-        risk_analysis_agent,
-        intervention_planning_agent,
-        outcome_prediction_agent
-    ],
-    tools=[...all_8_tools]
-)
+```
+┌─────────────────────────────────────────┐
+│    MultiAgentOrchestrator (FastAPI)    │
+│         asyncio.gather() parallel       │
+└────────────┬────────────────────────────┘
+             │
+    ┌────────┼─────────┬─────────────┐
+    ▼        ▼         ▼             ▼
+┌──────┐ ┌──────┐ ┌───────────┐ ┌──────────┐
+│Data  │ │Risk  │ │Intervention│ │ Outcome  │
+│Agent │ │Agent │ │   Agent    │ │  Agent   │
+└──────┘ └──────┘ └───────────┘ └──────────┘
+   ↓        ↓          ↓             ↓
+   Sequential │    Parallel Execution    │
+        ↓                                 ↓
+   ┌──────────────────────────────────────┐
+   │     SSE Stream to Frontend          │
+   │  (Real-time Glass Box events)       │
+   └──────────────────────────────────────┘
 ```
 
-### Sub-Agents
+### Execution Flow
 
-#### 1. Data Collection Agent
-- **Purpose:** Retrieve student information from database
-- **Tools:** `get_student_data()`
-- **Output:** Complete student profile
+**1. Sequential Phase:**
+- Data Collection Agent runs first
+- Retrieves student data from CSV/database
+- Outputs complete student profile
 
-#### 2. Risk Analysis Agent
-- **Purpose:** Calculate risk scores and generate notifications
-- **Tools:** `analyze_student_risk()`, `generate_alert_email()`, `track_student_progress()`
-- **Output:** Risk assessment + automated notifications
+**2. Parallel Phase:**
+- Risk Analysis, Intervention Planning, and Outcome Prediction run simultaneously
+- Uses `asyncio.gather()` for true parallelism
+- Each agent streams events back to frontend in real-time
 
-#### 3. Intervention Planning Agent
-- **Purpose:** Design personalized intervention strategies
-- **Tools:** `generate_intervention_plan()`
-- **Output:** Comprehensive intervention plan
+**3. Aggregation Phase:**
+- Orchestrator combines all results
+- Generates comprehensive Markdown report
+- Streams final report to dashboard
 
-#### 4. Outcome Prediction Agent
+### Agent Details
+
+#### 1. Data Collection Agent (Sequential)
+- **Purpose:** Retrieve student information
+- **Execution:** Runs first, blocks other agents
+- **Data Source:** CSV file with absolute path resolution
+- **Output:** Student profile with GPA, attendance, grades
+
+#### 2. Risk Analysis Agent (Parallel)
+- **Purpose:** Calculate risk scores and identify at-risk students
+- **Execution:** Parallel with agents 3 & 4
+- **Algorithm:** Multi-factor weighted scoring
+- **Output:** Risk level (CRITICAL/HIGH/MODERATE/LOW) with score
+
+#### 3. Intervention Planning Agent (Parallel)
+- **Purpose:** Design personalized interventions
+- **Execution:** Parallel with agents 2 & 4
+- **Strategy:** Evidence-based intervention selection
+- **Output:** Detailed action plan with timeline
+
+#### 4. Outcome Prediction Agent (Parallel)
 - **Purpose:** Forecast intervention success
-- **Tools:** `predict_intervention_success()`, `get_student_progress_timeline()`, `export_progress_visualization_data()`
-- **Output:** Success predictions + progress visualizations
+- **Execution:** Parallel with agents 2 & 3
+- **Model:** Statistical prediction with confidence intervals
+- **Output:** Success probability with expected outcomes
+
+### Admin Controls
+
+Teachers/Admins can toggle individual agents on/off:
+
+```typescript
+// Frontend: Toggle agent execution
+const enabledAgents = [
+  true,  // Data Collection (always required)
+  true,  // Risk Analysis
+  false, // Intervention Planning (disabled)
+  true   // Outcome Prediction
+];
+
+// Backend receives configuration
+POST /api/v1/agent/goal
+{
+  "student_id": "STU001",
+  "goal": "Analyze this student",
+  "enabled_agents": [true, true, false, true]
+}
+```
+
+## 📊 Full-Stack Application
+
+### Backend (FastAPI)
+
+**Technology Stack:**
+- Python 3.10+, FastAPI 2.0, SQLAlchemy
+- PostgreSQL (production), SQLite (development)
+- JWT authentication with bcrypt
+- Server-Sent Events for real-time streaming
+
+**Key Endpoints:**
+```
+POST   /api/v1/auth/login          # User authentication
+GET    /api/v1/students             # List all students
+POST   /api/v1/agent/goal          # Start agent analysis (SSE stream)
+GET    /api/v1/sessions             # Get all sessions
+DELETE /api/v1/sessions/{id}       # Delete session
+GET    /api/health                 # Health check
+GET    /docs                       # Swagger API docs
+```
+
+**Real-Time Streaming:**
+```python
+# SSE stream returns NDJSON events
+{"type": "agent_start", "agent": "Data Collection", "timestamp": "..."}
+{"type": "agent_complete", "agent": "Risk Analysis", "result": {...}}
+{"type": "orchestrator_thought", "thought": "Analyzing patterns..."}
+{"type": "final_report", "report": "## Analysis Complete\n..."}
+```
+
+### Frontend (Next.js)
+
+**Technology Stack:**
+- Next.js 14, React, TypeScript
+- Tailwind CSS for styling
+- Zustand for state management
+- Axios for API calls
+- react-markdown for report rendering
+
+**Pages:**
+```
+/login                  # Authentication
+/admin/agent            # Agent control panel (SSE streaming)
+/admin/students         # Student list
+/admin/teachers         # Teacher dashboard
+/admin/analytics        # System analytics
+/admin/settings         # Configuration
+```
+
+**Features:**
+- 🎨 Glass morphism design with dark theme
+- 📊 Real-time agent event streaming
+- 🔍 Searchable session history
+- 📈 Interactive charts and statistics
+- 🎯 Risk distribution visualization
+- 📱 Responsive mobile layout
+
+### Database Schema
+
+**PostgreSQL (Production):**
+```sql
+-- Users table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'teacher',
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Sessions table
+CREATE TABLE sessions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    student_id VARCHAR(50),
+    goal TEXT,
+    status VARCHAR(20),
+    result JSONB,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Events table
+CREATE TABLE events (
+    id SERIAL PRIMARY KEY,
+    session_id INTEGER REFERENCES sessions(id),
+    event_type VARCHAR(50),
+    event_data JSONB,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Students table
+CREATE TABLE students (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(100),
+    grade_level INTEGER,
+    gpa DECIMAL(3,2),
+    attendance_rate DECIMAL(5,2),
+    risk_level VARCHAR(20),
+    last_updated TIMESTAMP DEFAULT NOW()
+);
+```
+
+## 🌐 Chrome Extension
+
+### Overview
+
+Integrate Agent Aura into your existing school management system with a lightweight Chrome extension that works across 6+ platforms.
+
+**Supported Platforms:**
+- ✅ Schoology
+- ✅ Canvas LMS
+- ✅ Blackboard Learn
+- ✅ Moodle
+- ✅ PowerSchool
+- ✅ Generic (any school system)
+
+### Installation
+
+```bash
+# Navigate to extension folder
+cd chrome-extension
+
+# Load in Chrome
+1. Open chrome://extensions/
+2. Enable "Developer mode"
+3. Click "Load unpacked"
+4. Select chrome-extension folder
+```
+
+### Features
+
+**🔍 Auto-Detection:**
+- Automatically detects school management system
+- Extracts student data from gradebooks and profiles
+- Displays floating Agent Aura button on supported pages
+
+**⚡ Quick Actions:**
+- **Scan Students**: Extract student list from current page
+- **Analyze Risk**: Run AI analysis on individual student
+- **Open Dashboard**: Jump to Agent Aura analytics
+- **Sync Data**: Upload student data to backend
+
+**🔄 Auto-Sync:**
+- Configure automatic data synchronization
+- Set sync interval (default: 60 minutes)
+- Background service worker handles scheduling
+
+**🔔 Notifications:**
+- Browser notifications for high-risk students
+- Real-time alerts when critical issues detected
+- Customizable notification settings
+
+### Configuration
+
+```javascript
+// Extension popup configuration
+{
+  "apiUrl": "http://localhost:8000",  // Development
+  "apiUrl": "https://api.yourdomain.com",  // Production
+  "apiKey": "your-api-key-here",
+  "autoSync": true,
+  "syncInterval": 60,  // minutes
+  "notifications": true
+}
+```
+
+### Usage Example
+
+```javascript
+// 1. Navigate to Schoology gradebook
+// 2. Extension detects 30 students
+// 3. Click "Scan Students" button
+// Extension extracts: [{id: "S001", name: "John Doe", grade: "B+"}, ...]
+
+// 4. Click "Sync Data"
+// Extension sends to: POST /api/v1/students/bulk
+// Response: {success: true, count: 30}
+
+// 5. View in Agent Aura dashboard
+// Open: http://localhost:3000/admin/teachers
+// See: All 30 students with risk indicators
+```
+
+### Architecture
+
+```
+┌─────────────────────────────┐
+│   School Management System  │
+│   (Schoology/Canvas/etc)    │
+└─────────────┬───────────────┘
+              │
+              ↓
+┌─────────────────────────────┐
+│   Content Script            │
+│   - Detect system           │
+│   - Extract student data    │
+│   - Add UI overlay          │
+└─────────────┬───────────────┘
+              │
+              ↓
+┌─────────────────────────────┐
+│   Background Service Worker │
+│   - Auto-sync scheduler     │
+│   - Notifications           │
+│   - Context menus           │
+└─────────────┬───────────────┘
+              │
+              ↓
+┌─────────────────────────────┐
+│   Agent Aura Backend API    │
+│   http://localhost:8000     │
+└─────────────────────────────┘
+```
 
 ---
 
@@ -481,54 +775,83 @@ print(f"✓ Notifications Sent: {report['summary']['total_notifications_sent']}"
 
 ```
 agent-aura/
-├── agent_aura/                 # Main package
-│   ├── __init__.py            # Package initialization
-│   ├── agent.py               # Orchestrator agent
-│   ├── config.py              # Configuration management
-│   ├── tools.py               # All 8 tools implementation
-│   ├── utils.py               # Utility functions
-│   ├── sub_agents/            # Specialized agents
+├── agent-aura-backend/         # FastAPI Backend
+│   ├── app/
 │   │   ├── __init__.py
-│   │   ├── data_collection_agent.py
-│   │   ├── risk_analysis_agent.py
-│   │   ├── intervention_planning_agent.py
-│   │   └── outcome_prediction_agent.py
-│   └── cli.py                 # Command-line interface
+│   │   ├── main.py            # FastAPI application
+│   │   ├── agent_core/        # Multi-agent system
+│   │   │   ├── orchestrator.py  # 4-agent orchestration
+│   │   │   ├── agent.py
+│   │   │   └── tools.py
+│   │   ├── api/               # API endpoints
+│   │   │   └── __init__.py
+│   │   ├── models/            # Database models
+│   │   │   ├── database.py
+│   │   │   └── database_production.py
+│   │   ├── middleware/        # Middleware
+│   │   │   └── rate_limit.py
+│   │   └── services/          # Business logic
+│   │       ├── auth.py
+│   │       └── ...
+│   ├── scripts/
+│   │   └── migrate_to_postgresql.py  # DB migration
+│   ├── requirements.txt
+│   ├── requirements-production.txt
+│   ├── run-backend.ps1
+│   └── Dockerfile
 │
-├── data/                       # Data directory
-│   ├── student_data.csv       # Student database
-│   └── student_data_example.csv
+├── agent-aura-frontend/        # Next.js Frontend
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── login/             # Authentication
+│   │   │   └── page.tsx
+│   │   └── admin/             # Protected routes
+│   │       ├── agent/         # Agent control panel
+│   │       ├── students/      # Student list
+│   │       ├── teachers/      # Teacher dashboard
+│   │       ├── analytics/     # System analytics
+│   │       └── settings/      # Configuration
+│   ├── components/            # React components
+│   │   ├── EventCard.tsx      # Glass Box events
+│   │   ├── SessionView.tsx
+│   │   ├── TrajectoryView.tsx
+│   │   └── ...
+│   ├── lib/                   # Utilities
+│   │   ├── api.ts             # API client
+│   │   ├── store.ts           # Zustand state
+│   │   └── types.ts
+│   ├── package.json
+│   ├── next.config.js
+│   └── tsconfig.json
 │
-├── output/                     # Output directory
-│   ├── notifications.json     # Generated notifications
-│   ├── progress_database.json # Progress tracking
-│   └── summary_report.json    # Summary reports
+├── chrome-extension/           # Chrome Extension
+│   ├── manifest.json          # Extension config
+│   ├── popup.html             # Popup UI
+│   ├── popup.js               # Popup logic
+│   ├── content.js             # Content script
+│   ├── content.css            # Injected styles
+│   ├── background.js          # Service worker
+│   ├── icons/                 # Extension icons
+│   └── README.md
 │
-├── tests/                      # Test suite
-│   ├── __init__.py
-│   ├── test_tools.py          # Tool tests
-│   ├── test_agents.py         # Agent tests
-│   ├── test_integration.py    # Integration tests
-│   └── test_evaluation.py     # Evaluation tests
+├── data/                       # Data files
+│   └── student_data.csv
 │
 ├── docs/                       # Documentation
-│   ├── architecture.md        # Architecture diagrams
-│   ├── api_reference.md       # API documentation
-│   └── deployment.md          # Deployment guide
+│   ├── _config.yml
+│   └── index.html
 │
-├── deployment/                 # Deployment configs
-│   ├── Dockerfile             # Docker configuration
-│   ├── docker-compose.yml     # Docker Compose
-│   └── cloudbuild.yaml        # Google Cloud Build
+├── tests/                      # Test suite
+│   └── test_integration.py
 │
-├── notebooks/                  # Jupyter notebooks
-│   └── Agent_Aura_Demo.ipynb # Kaggle submission notebook
-│
-├── requirements.txt            # Python dependencies
-├── .env.template              # Environment template
-├── .gitignore                 # Git ignore rules
-├── LICENSE                    # Apache 2.0 license
-└── README.md                  # This file
+├── .env.production.template    # Production config template
+├── PRODUCTION_DEPLOYMENT.md    # Deployment guide
+├── SYSTEM_TEST_REPORT.md       # Test results
+├── START_ALL.ps1               # Quick start script
+├── requirements.txt
+├── README.md                   # This file
+└── LICENSE
 ```
 
 ---
@@ -576,82 +899,339 @@ config.orchestrator_model = "gemini-1.5-pro"
 config.worker_model = "gemini-1.5-flash"
 ```
 
----
+## 🚀 Production Deployment
 
-## 🚢 Deployment
+### Prerequisites
 
-### Local Development
+- Ubuntu 20.04+ server
+- PostgreSQL 14+
+- Redis 6+
+- Nginx
+- SSL certificate
+- Domain name
 
-```bash
-adk web
-```
-
-### Docker Deployment
-
-```bash
-# Build image
-docker build -t agent-aura:latest .
-
-# Run container
-docker run -p 8000:8000 --env-file .env agent-aura:latest
-```
-
-### Google Cloud Run
+### Quick Production Setup
 
 ```bash
-# Configure gcloud
-gcloud config set project YOUR_PROJECT_ID
+# 1. Clone repository
+git clone https://github.com/yourusername/agent-aura.git
+cd agent-aura
 
-# Deploy
-gcloud run deploy agent-aura \
-  --source . \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --set-env-vars GEMINI_API_KEY=$GEMINI_API_KEY
+# 2. Configure environment
+cp .env.production.template agent-aura-backend/.env
+nano agent-aura-backend/.env  # Edit with production values
+
+# 3. Install dependencies
+cd agent-aura-backend
+python3.10 -m venv venv
+source venv/bin/activate
+pip install -r requirements-production.txt
+
+# 4. Setup PostgreSQL
+sudo -u postgres psql
+CREATE DATABASE agent_aura_prod;
+CREATE USER agent_aura_user WITH PASSWORD 'secure_password';
+GRANT ALL PRIVILEGES ON DATABASE agent_aura_prod TO agent_aura_user;
+\q
+
+# 5. Migrate database
+python scripts/migrate_to_postgresql.py
+
+# 6. Install frontend
+cd ../agent-aura-frontend
+npm install
+npm run build
+
+# 7. Configure Nginx
+sudo nano /etc/nginx/sites-available/agent-aura-backend
+# Copy configuration from PRODUCTION_DEPLOYMENT.md
+
+# 8. Start services
+sudo systemctl start agent-aura-backend
+sudo systemctl start agent-aura-frontend
 ```
 
-### Vertex AI Agent Engine
+### Production Features
 
-See `docs/deployment.md` for detailed Agent Engine deployment instructions.
+#### 🔒 Security
 
----
+**SSL/HTTPS:**
+```bash
+# Obtain Let's Encrypt certificate
+sudo certbot certonly --standalone -d yourdomain.com -d api.yourdomain.com
 
-## 🧪 Evaluation & Testing
+# Auto-renewal
+sudo systemctl enable certbot.timer
+```
+
+**Rate Limiting:**
+```python
+# Per-user rate limits with Redis
+RATE_LIMIT_PER_MINUTE=60
+RATE_LIMIT_PER_HOUR=1000
+RATE_LIMIT_PER_DAY=10000
+```
+
+**Security Headers:**
+```nginx
+add_header Strict-Transport-Security "max-age=31536000" always;
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-XSS-Protection "1; mode=block" always;
+```
+
+#### 📊 Monitoring
+
+**Sentry Integration:**
+```env
+SENTRY_DSN=your_sentry_dsn_here
+SENTRY_ENVIRONMENT=production
+SENTRY_TRACES_SAMPLE_RATE=0.1
+```
+
+**Logging:**
+```env
+LOG_LEVEL=INFO
+LOG_FILE=/var/log/agent-aura/backend.log
+LOG_MAX_BYTES=10485760  # 10MB
+LOG_BACKUP_COUNT=5
+```
+
+#### 💾 Database
+
+**PostgreSQL Configuration:**
+```env
+DATABASE_URL=postgresql://agent_aura_user:password@localhost:5432/agent_aura_prod
+DB_POOL_SIZE=20
+DB_MAX_OVERFLOW=40
+DB_POOL_TIMEOUT=30
+```
+
+**Connection Pooling:**
+```python
+# Automatic connection pooling with QueuePool
+engine = create_async_engine(
+    DATABASE_URL,
+    pool_size=20,
+    max_overflow=40,
+    pool_pre_ping=True  # Verify connections
+)
+```
+
+#### 🔄 Backups
+
+**Automated Daily Backups:**
+```bash
+# Cron job runs at 2 AM daily
+0 2 * * * /usr/local/bin/backup-agent-aura.sh
+
+# Backup script
+pg_dump -U agent_aura_user agent_aura_prod | gzip > backup_$(date +%Y%m%d).sql.gz
+```
+
+### Production Architecture
+
+```
+Internet
+    ↓
+┌─────────────────┐
+│  Nginx (SSL)    │  ← Port 443 (HTTPS)
+│  Reverse Proxy  │
+└────────┬────────┘
+         │
+    ┌────┴─────┐
+    ↓          ↓
+┌────────┐  ┌────────┐
+│Backend │  │Frontend│
+│:8000   │  │:3000   │
+└───┬────┘  └────────┘
+    │
+┌───┴──────────────┐
+│  PostgreSQL      │
+│  Port 5432       │
+└──────────────────┘
+    │
+┌───┴──────────────┐
+│  Redis Cache     │
+│  Port 6379       │
+└──────────────────┘
+```
+
+### Environment Variables
+
+**Complete Production Configuration:**
+```env
+# Application
+ENVIRONMENT=production
+DEBUG=false
+VERSION=2.0.0
+
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/agent_aura_prod
+DB_POOL_SIZE=20
+
+# Security
+SECRET_KEY=generate_with_openssl_rand_hex_32
+JWT_SECRET_KEY=generate_with_openssl_rand_hex_32
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# CORS
+CORS_ORIGINS=https://yourdomain.com
+CORS_CREDENTIALS=true
+
+# Rate Limiting
+RATE_LIMIT_ENABLED=true
+RATE_LIMIT_PER_MINUTE=60
+USE_REDIS_RATE_LIMIT=true
+
+# SSL
+SSL_ENABLED=true
+SSL_CERT_PATH=/etc/letsencrypt/live/yourdomain.com/fullchain.pem
+SSL_KEY_PATH=/etc/letsencrypt/live/yourdomain.com/privkey.pem
+
+# Redis
+REDIS_URL=redis://localhost:6379
+REDIS_PASSWORD=your_redis_password
+
+# Monitoring
+SENTRY_DSN=your_sentry_dsn
+LOG_LEVEL=INFO
+
+# Email
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+```
+
+### Systemd Services
+
+**Backend Service:**
+```ini
+[Unit]
+Description=Agent Aura Backend API
+After=network.target postgresql.service
+
+[Service]
+User=www-data
+WorkingDirectory=/var/www/agent-aura/agent-aura-backend
+Environment="PATH=/var/www/agent-aura/agent-aura-backend/venv/bin"
+ExecStart=/var/www/agent-aura/agent-aura-backend/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**Frontend Service:**
+```ini
+[Unit]
+Description=Agent Aura Frontend
+After=network.target
+
+[Service]
+User=www-data
+WorkingDirectory=/var/www/agent-aura/agent-aura-frontend
+Environment="NODE_ENV=production"
+ExecStart=/usr/bin/npm run start
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### Health Checks
+
+```bash
+# Backend health
+curl https://api.yourdomain.com/health
+
+# Frontend health
+curl https://yourdomain.com
+
+# Database health
+psql -U agent_aura_user -d agent_aura_prod -c "SELECT 1"
+
+# Redis health
+redis-cli -a password ping
+```
+
+### Monitoring Commands
+
+```bash
+# Check services
+sudo systemctl status agent-aura-backend
+sudo systemctl status agent-aura-frontend
+
+# View logs
+sudo journalctl -u agent-aura-backend -f
+sudo journalctl -u agent-aura-frontend -f
+
+# Database connections
+sudo -u postgres psql -c "SELECT count(*) FROM pg_stat_activity"
+
+# System resources
+htop
+df -h
+```
+
+### Scaling
+
+**Horizontal Scaling:**
+- Add load balancer (HAProxy/Nginx)
+- Run multiple backend instances
+- Use Redis for shared sessions
+- PostgreSQL read replicas
+
+**Vertical Scaling:**
+- Increase DB_POOL_SIZE
+- Add more workers to uvicorn
+- Increase server resources
+
+For complete deployment guide, see [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md)
+
+## 🧪 Testing
 
 ### Run Tests
 
 ```bash
-# All tests
-pytest
+# Backend tests
+cd agent-aura-backend
+pytest tests/
 
-# Specific test suite
-pytest tests/test_tools.py
-pytest tests/test_agents.py
-pytest tests/test_integration.py
+# Frontend tests (if configured)
+cd agent-aura-frontend
+npm test
 
-# With coverage
-pytest --cov=agent_aura --cov-report=html
+# Integration tests
+python tests/test_integration.py
 ```
 
-### Evaluation
+### System Test Report
 
-```bash
-# Run ADK evaluation
-adk eval agent_aura tests/evaluation/test_set.evalset.json
+See [SYSTEM_TEST_REPORT.md](SYSTEM_TEST_REPORT.md) for comprehensive test results.
 
-# Generate evaluation report
-python -m agent_aura.evaluation --output eval_report.json
-```
+**Test Coverage:**
+- ✅ Database connectivity (SQLite & PostgreSQL)
+- ✅ Backend API endpoints (all 15 endpoints)
+- ✅ Frontend pages (6 pages)
+- ✅ Multi-agent orchestration (4 agents)
+- ✅ Real-time streaming (SSE with NDJSON)
+- ✅ Authentication (JWT tokens)
+- ✅ Data integrity (100 students)
+
+**Overall Grade: A-** (Excellent, production hardening complete)
 
 ### Performance Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Analysis Speed | <1 sec/student | 0.3 sec |
-| Notification Generation | <1 sec | 0.8 sec |
-| Batch Processing (100 students) | <60 sec | 30 sec |
-| Success Prediction Accuracy | >80% | 85% |
-| Memory Usage | <500MB | 320MB |
+| Metric | Target | Actual | Status |
+|--------|--------|--------|--------|
+| API Response Time | <500ms | 150ms | ✅ |
+| Agent Analysis | <5 sec | 2-3 sec | ✅ |
+| SSE Streaming | Real-time | <100ms latency | ✅ |
+| Database Query | <100ms | 45ms avg | ✅ |
+| Frontend Load | <2 sec | 1.2 sec | ✅ |
+| Memory Usage | <1GB | 650MB | ✅ |
 
 ---
 
@@ -739,22 +1319,87 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 - **Kaggle Agents Intensive** - For the educational opportunity
 - **K-12 Educators** - For inspiration and real-world insights
 
+## 🛠️ Technology Stack
+
+### Backend
+- **Python** 3.10+
+- **FastAPI** 2.0 - High-performance async API framework
+- **SQLAlchemy** 2.0 - ORM with async support
+- **PostgreSQL** 14+ - Production database
+- **Redis** 6+ - Caching and rate limiting
+- **JWT** - Authentication
+- **Uvicorn** - ASGI server
+- **Pydantic** 2.0 - Data validation
+
+### Frontend
+- **Next.js** 14 - React framework with App Router
+- **React** 18 - UI library
+- **TypeScript** 5 - Type safety
+- **Tailwind CSS** 3 - Utility-first styling
+- **Zustand** - State management
+- **Axios** - HTTP client
+- **react-markdown** - Markdown rendering
+
+### Chrome Extension
+- **Manifest V3** - Latest extension API
+- **Vanilla JavaScript** - No framework overhead
+- **Chrome Storage API** - Configuration persistence
+- **Content Scripts** - Page integration
+- **Service Workers** - Background processing
+
+### DevOps
+- **Nginx** - Reverse proxy and SSL termination
+- **Let's Encrypt** - Free SSL certificates
+- **Systemd** - Service management
+- **Logrotate** - Log management
+- **Sentry** - Error tracking
+- **Docker** - Containerization (optional)
+
+### Development
+- **Git** - Version control
+- **PowerShell** - Build scripts
+- **VS Code** - IDE
+- **Pytest** - Python testing
+- **Jest** - JavaScript testing (optional)
+
 ---
 
-## 📞 Contact
+## 📞 Contact & Links
 
-**Author:** Zenshiro  
-**Email:** zenshiro@example.com  
-**GitHub:** [@zenshiro](https://github.com/zenshiro)  
-**Project Link:** [https://github.com/zenshiro/agent-aura](https://github.com/zenshiro/agent-aura)  
-**Kaggle Submission:** [Agent Aura v2.0 Notebook](https://kaggle.com/notebooks/agent-aura-v2)
+**Author:** Sumedh Gurchal  
+**Email:** sumedhgurchal358@gmail.com  
+**Project Repository:** [https://github.com/05sumedh08/agent-aura](https://github.com/05sumedh08/agent-aura)  
+**Documentation:** [https://05sumedh08.github.io/agent-aura](https://05sumedh08.github.io/agent-aura)  
+**Issues:** [GitHub Issues](https://github.com/05sumedh08/agent-aura/issues)
+
+### Quick Links
+
+- 📖 [Full Documentation](docs/)
+- 🚀 [Production Deployment Guide](docs/deployment/PRODUCTION_DEPLOYMENT.md)
+- 📦 [Installation Guide](docs/deployment/INSTALLATION_COMPLETE.md)
+- 🧪 [System Test Report](docs/guides/SYSTEM_TEST_REPORT.md)
+- 📊 [Testing Guide](docs/guides/TESTING_GUIDE.md)
+- 🔧 [Chrome Extension Guide](chrome-extension/README.md)
+- 🤝 [Contributing Guidelines](CONTRIBUTING.md)
+
+### Connect
+
+- **GitHub:** [@05sumedh08](https://github.com/05sumedh08)
+- **LinkedIn:** Connect with Sumedh Gurchal
+- **Email:** sumedhgurchal358@gmail.com
 
 ---
 
 <div align="center">
 
-**⭐ If Agent Aura helps your educational mission, please star this repository! ⭐**
+## ⭐ If Agent Aura helps your educational mission, please star this repository! ⭐
 
-Made with ❤️ for K-12 students worldwide
+### Made with ❤️ for K-12 students worldwide
+
+**Agent Aura v2.0** - Production-Ready Multi-Agent AI System
+
+[Report Bug](https://github.com/05sumedh08/agent-aura/issues) · [Request Feature](https://github.com/05sumedh08/agent-aura/issues) · [Documentation](docs/)
+
+Developed by **Sumedh Gurchal** | sumedhgurchal358@gmail.com
 
 </div>
