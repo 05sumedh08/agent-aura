@@ -211,7 +211,7 @@ Student Data → Risk Analysis → Notifications → Interventions → Progress 
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/agent-aura.git
+git clone https://github.com/05sumedh08/agent-aura.git
 cd agent-aura
 ```
 
