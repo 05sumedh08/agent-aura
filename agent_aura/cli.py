@@ -50,7 +50,7 @@ def analyze_student(student_id: str, data_file: str = "./data/student_data.csv",
         print(f"❌ Error: {student_data.get('error')}")
         return
     
-    print(f"✓ Student: {student_data['name']} (Grade {student_data['grade']})")
+    print(f"[OK] Student: {student_data['name']} (Grade {student_data['grade']})")
     if verbose:
         print(f"  GPA: {student_data['gpa']:.2f}")
         print(f"  Attendance: {student_data['attendance']:.1f}%")
@@ -61,7 +61,7 @@ def analyze_student(student_id: str, data_file: str = "./data/student_data.csv",
     risk_analysis = analyze_student_risk(student_id)
     
     emoji = get_risk_level_emoji(risk_analysis["risk_level"])
-    print(f"✓ Risk Level: {emoji} {risk_analysis['risk_level']} (Score: {risk_analysis['risk_score']:.3f})")
+    print(f"[OK] Risk Level: {emoji} {risk_analysis['risk_level']} (Score: {risk_analysis['risk_score']:.3f})")
     
     if verbose and risk_analysis["risk_factors"]:
         print(f"  Risk Factors:")
@@ -71,14 +71,14 @@ def analyze_student(student_id: str, data_file: str = "./data/student_data.csv",
     # Step 3: Intervention Planning
     print(f"\n[3/6] Generating intervention plan...")
     plan = generate_intervention_plan(risk_analysis["risk_level"])
-    print(f"✓ Plan Type: {plan['type']}")
+    print(f"[OK] Plan Type: {plan['type']}")
     print(f"  Duration: {plan['duration_weeks']} weeks")
     print(f"  Frequency: {plan['frequency']}")
     
     # Step 4: Success Prediction
     print(f"\n[4/6] Predicting intervention success...")
     prediction = predict_intervention_success(risk_analysis["risk_level"])
-    print(f"✓ Expected Success Rate: {prediction['base_success_rate']}%")
+    print(f"[OK] Expected Success Rate: {prediction['base_success_rate']}%")
     print(f"  Confidence: {prediction['confidence_level']}%")
     print(f"  Timeline: {prediction['timeline_weeks']} weeks")
     
@@ -86,11 +86,11 @@ def analyze_student(student_id: str, data_file: str = "./data/student_data.csv",
     print(f"\n[5/6] Checking notification requirements...")
     if risk_analysis["risk_level"] in ["CRITICAL", "HIGH"]:
         email = generate_alert_email(student_id)
-        print(f"✓ 📧 Notification generated: {email['priority']} priority")
+        print(f"[OK] Notification generated: {email['priority']} priority")
         if verbose:
             print(f"  Subject: {email['subject']}")
     else:
-        print(f"✓ No immediate notification required")
+        print(f"[OK] No immediate notification required")
     
     # Step 6: Track Progress
     print(f"\n[6/6] Tracking progress...")
@@ -100,7 +100,7 @@ def analyze_student(student_id: str, data_file: str = "./data/student_data.csv",
         float(risk_analysis["risk_score"]),
         student_data["name"]
     )
-    print(f"✓ Progress tracked: {progress['trend']}")
+    print(f"[OK] Progress tracked: {progress['trend']}")
     
     print(f"\n{'='*80}")
     print(f"✅ ANALYSIS COMPLETE")
@@ -186,20 +186,20 @@ def export_reports(output_dir: str = "./output", format: str = "all"):
         print("Exporting notifications...")
         result = save_notifications_to_file(f"{output_dir}/notifications.json")
         if result["success"]:
-            print(f"✓ Saved {result['count']} notifications to {result['filepath']}")
+            print(f"[OK] Saved {result['count']} notifications to {result['filepath']}")
     
     if format in ["all", "progress"]:
         print("Exporting progress database...")
         result = save_progress_database_to_file(f"{output_dir}/progress_database.json")
         if result["success"]:
-            print(f"✓ Saved {result['students_tracked']} student records to {result['filepath']}")
+            print(f"[OK] Saved {result['students_tracked']} student records to {result['filepath']}")
     
     if format in ["all", "summary"]:
         print("Generating summary report...")
         result = export_summary_report(output_dir)
         if result["success"]:
-            print(f"✓ JSON report: {result['json_report']}")
-            print(f"✓ CSV report: {result['csv_report']}")
+            print(f"[OK] JSON report: {result['json_report']}")
+            print(f"[OK] CSV report: {result['csv_report']}")
     
     print(f"\n{'='*80}")
     print(f"✅ EXPORT COMPLETE")

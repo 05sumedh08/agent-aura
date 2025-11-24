@@ -55,7 +55,7 @@ def demo_single_student_analysis(student_id="S001"):
         print(f"❌ Error: {student_data['error']}")
         return None
     
-    print(f"✓ Student Retrieved: {student_data['name']}")
+    print(f"[OK] Student Retrieved: {student_data['name']}")
     print(f"  • Grade Level: {student_data['grade']}")
     print(f"  • GPA: {student_data['gpa']:.2f}")
     print(f"  • Attendance: {student_data['attendance']:.1f}%")
@@ -66,7 +66,7 @@ def demo_single_student_analysis(student_id="S001"):
     risk_analysis = analyze_student_risk(student_id)
     
     emoji = get_risk_level_emoji(risk_analysis["risk_level"])
-    print(f"✓ Risk Assessment Complete")
+    print(f"[OK] Risk Assessment Complete")
     print(f"  • Risk Level: {emoji} {risk_analysis['risk_level']}")
     print(f"  • Risk Score: {risk_analysis['risk_score']:.3f}")
     print(f"  • Risk Factors:")
@@ -77,7 +77,7 @@ def demo_single_student_analysis(student_id="S001"):
     print_section("Step 3: INTERVENTION PLANNING")
     plan = generate_intervention_plan(risk_analysis["risk_level"])
     
-    print(f"✓ Intervention Plan Generated")
+    print(f"[OK] Intervention Plan Generated")
     print(f"  • Type: {plan['type']}")
     print(f"  • Priority: {plan['priority']}")
     print(f"  • Duration: {plan['duration_weeks']} weeks")
@@ -91,7 +91,7 @@ def demo_single_student_analysis(student_id="S001"):
     print_section("Step 4: OUTCOME PREDICTION")
     prediction = predict_intervention_success(risk_analysis["risk_level"])
     
-    print(f"✓ Success Forecast Generated")
+    print(f"[OK] Success Forecast Generated")
     print(f"  • Expected Success Rate: {prediction['base_success_rate']}%")
     print(f"  • Confidence Level: {prediction['confidence_level']}%")
     print(f"  • Timeline: {prediction['timeline_weeks']} weeks")
@@ -102,14 +102,14 @@ def demo_single_student_analysis(student_id="S001"):
     print_section("Step 5: AUTOMATED NOTIFICATION")
     if risk_analysis["risk_level"] in ["CRITICAL", "HIGH"]:
         email = generate_alert_email(student_id)
-        print(f"✓ Email Notification Generated")
+        print(f"[OK] Email Notification Generated")
         print(f"  • Priority: {email['priority']}")
         print(f"  • Email ID: {email['email_id']}")
         print(f"  • Subject: {email['subject']}")
         print(f"  • Recipients: {', '.join(email['recipients'])}")
         print(f"  • Concerns Count: {email['concerns_count']}")
     else:
-        print(f"✓ No immediate notification required (Risk Level: {risk_analysis['risk_level']})")
+        print(f"[OK] No immediate notification required (Risk Level: {risk_analysis['risk_level']})")
     
     # Step 6: Progress Tracking
     print_section("Step 6: PROGRESS TRACKING")
@@ -120,7 +120,7 @@ def demo_single_student_analysis(student_id="S001"):
         student_data["name"]
     )
     
-    print(f"✓ Progress Record Created")
+    print(f"[OK] Progress Record Created")
     print(f"  • Student ID: {progress['student_id']}")
     print(f"  • Current Risk: {progress['current_risk_level']} ({progress['current_risk_score']:.3f})")
     print(f"  • Trend: {progress['trend']}")
@@ -229,7 +229,7 @@ def demo_progress_tracking():
         student_data["name"],
         "Initial assessment - intervention started"
     )
-    print(f"✓ Entry 1: Risk Score {initial_risk['risk_score']:.3f} - Intervention Started")
+    print(f"[OK] Entry 1: Risk Score {initial_risk['risk_score']:.3f} - Intervention Started")
     
     # Simulate improvement over weeks
     improvements = [
@@ -250,13 +250,13 @@ def demo_progress_tracking():
             level = "LOW"
         
         track_student_progress(student_id, level, score, student_data["name"], note)
-        print(f"✓ Entry {i}: Risk Score {score:.3f} - {note}")
+        print(f"[OK] Entry {i}: Risk Score {score:.3f} - {note}")
     
     # Get complete timeline
     print_section("Retrieving Progress Timeline")
     timeline = get_student_progress_timeline(student_id)
     
-    print(f"✓ Timeline Retrieved")
+    print(f"[OK] Timeline Retrieved")
     print(f"  • Total Records: {timeline['total_records']}")
     print(f"  • Average Risk Score: {timeline['statistics']['average_risk_score']:.3f}")
     print(f"  • Minimum Risk Score: {timeline['statistics']['minimum_risk_score']:.3f}")
@@ -267,7 +267,7 @@ def demo_progress_tracking():
     print_section("Exporting Visualization Data")
     viz_data = export_progress_visualization_data(student_id, "json")
     
-    print(f"✓ Visualization Data Exported")
+    print(f"[OK] Visualization Data Exported")
     print(f"  • Format: {viz_data['export_format']}")
     print(f"  • Timeline Points: {len(viz_data['timeline_data'])}")
     print(f"  • Current Status: {viz_data['summary']['current_status']['risk_level']} ({viz_data['summary']['current_status']['risk_score']:.3f})")
@@ -289,21 +289,21 @@ def demo_report_export():
     print_section("Exporting Notifications")
     notif_result = save_notifications_to_file(f"{output_dir}/notifications.json")
     if notif_result["success"]:
-        print(f"✓ Saved {notif_result['count']} notifications")
+        print(f"[OK] Saved {notif_result['count']} notifications")
         print(f"  • File: {notif_result['filepath']}")
     
     # Export progress database
     print_section("Exporting Progress Database")
     prog_result = save_progress_database_to_file(f"{output_dir}/progress_database.json")
     if prog_result["success"]:
-        print(f"✓ Saved {prog_result['students_tracked']} student records")
+        print(f"[OK] Saved {prog_result['students_tracked']} student records")
         print(f"  • File: {prog_result['filepath']}")
     
     # Export summary report
     print_section("Exporting Summary Report")
     summary_result = export_summary_report(output_dir)
     if summary_result["success"]:
-        print(f"✓ Summary reports generated")
+        print(f"[OK] Summary reports generated")
         print(f"  • JSON: {summary_result['json_report']}")
         print(f"  • CSV: {summary_result['csv_report']}")
         print(f"\nSummary Statistics:")
@@ -343,10 +343,10 @@ def main():
     print_header("DEMONSTRATION COMPLETE")
     
     print("✅ All Agent Aura Features Demonstrated:")
-    print("   1. ✓ Single Student Analysis (Complete Workflow)")
-    print("   2. ✓ Batch Processing (Multiple Students)")
-    print("   3. ✓ Progress Tracking (Timeline & Trends)")
-    print("   4. ✓ Report Export (JSON, CSV, Notifications)")
+    print("   1. [OK] Single Student Analysis (Complete Workflow)")
+    print("   2. [OK] Batch Processing (Multiple Students)")
+    print("   3. [OK] Progress Tracking (Timeline & Trends)")
+    print("   4. [OK] Report Export (JSON, CSV, Notifications)")
     print("\n🎯 Agent Aura v2.0 is fully operational!")
     print(f"\n📁 Check the ./output/ directory for generated reports.\n")
 

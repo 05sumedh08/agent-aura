@@ -1,0 +1,7 @@
+≡ƒöì Checking Agent Aura Environment...
+≡ƒöæ Validating Gemini API Key...
+Γ¥î Error: Failed to validate Gemini API Key.
+   Details: InvalidArgument('API Key not found. Please pass a valid API key.')
+
+Γ¥î Environment check failed. Please fix the issues above.
+

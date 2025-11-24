@@ -14,8 +14,8 @@ services:
       - "8000:8000"
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
-      - ORCHESTRATOR_MODEL=${ORCHESTRATOR_MODEL:-gemini-2.0-flash-exp}
-      - WORKER_MODEL=${WORKER_MODEL:-gemini-1.5-flash}
+      - ORCHESTRATOR_MODEL=${ORCHESTRATOR_MODEL:-gemini-3-pro-preview}
+      - WORKER_MODEL=${WORKER_MODEL:-gemini-3-pro-preview}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
     volumes:
       - ./data:/app/data:ro
@@ -23,14 +23,13 @@ services:
       - ./logs:/app/logs
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      test: [ "CMD", "python", "-c", "import sys; sys.exit(0)" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     networks:
       - agent-aura-network
-
   # ============================================================================
   # Optional: Monitoring with Prometheus (for production)
   # ============================================================================

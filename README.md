@@ -399,7 +399,7 @@ GET    /api/v1/students             # List all students
 POST   /api/v1/agent/goal          # Start agent analysis (SSE stream)
 GET    /api/v1/sessions             # Get all sessions
 DELETE /api/v1/sessions/{id}       # Delete session
-GET    /api/health                 # Health check
+GET    /health                     # Health check
 GET    /docs                       # Swagger API docs
 ```
 

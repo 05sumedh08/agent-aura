@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+================================================================================
+AGENT AURA - INTEGRATION TESTS
+================================================================================
+
+[OK] Complete workflow test passed!
+
+[OK] Batch processing test passed! Processed 5 students
+
+[OK] Progress timeline test passed!
+
+[OK] Visualization export test passed!
+
+================================================================================
+  File "S:\Courses\Kaggle\Agent_Aura_GIT\tests\test_integration.py", line 189, in <module>
+    print("\u2705 ALL INTEGRATION TESTS PASSED!")
+  File "C:\Users\sumed\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>

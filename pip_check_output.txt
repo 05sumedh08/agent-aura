@@ -1,0 +1,7 @@
+google-ai-generativelanguage 0.4.0 has requirement protobuf!=3.20.0,!=3.20.1,!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.19.5, but you have protobuf 6.33.1.
+langchain 0.1.0 has requirement tenacity<9.0.0,>=8.1.0, but you have tenacity 9.1.2.
+langchain-community 0.0.13 has requirement tenacity<9.0.0,>=8.1.0, but you have tenacity 9.1.2.
+langchain-core 0.1.10 has requirement packaging<24.0,>=23.2, but you have packaging 25.0.
+langchain-core 0.1.10 has requirement tenacity<9.0.0,>=8.1.0, but you have tenacity 9.1.2.
+langgraph-checkpoint 3.0.1 has requirement langchain-core>=0.2.38, but you have langchain-core 0.1.10.
+langgraph-prebuilt 1.0.4 has requirement langchain-core>=1.0.0, but you have langchain-core 0.1.10.

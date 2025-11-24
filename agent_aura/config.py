@@ -16,8 +16,8 @@ class AgentAuraConfig:
     """Configuration for Agent Aura multi-agent system."""
     
     # Primary Model Configuration - Gemini models with fallback support
-    orchestrator_model: str = "gemini-1.5-pro"  # Primary: Gemini 1.5 Pro (better quota)
-    worker_model: str = "gemini-1.5-pro"  # Primary: Gemini 1.5 Pro (better quota)
+    orchestrator_model: str = "gemini-3-pro-preview"  # Primary: Gemini 3 Pro Preview
+    worker_model: str = "gemini-3-pro-preview"  # Primary: Gemini 3 Pro Preview
     
     # Fallback Models (used when primary model fails/overloaded)
     fallback_models: Optional[list] = None  # Will be set in __post_init__
@@ -68,6 +68,8 @@ class AgentAuraConfig:
         # Set up fallback model chain (try in order when primary fails)
         if self.fallback_models is None:
             self.fallback_models = [
+                "gemini-3-pro-preview",  # Gemini 3 Pro Preview
+                "gemini-2.0-flash-exp",  # Gemini 2.0 Flash
                 "gemini-1.5-pro",  # Gemini Pro (more stable)
                 "gemini-1.5-flash-8b",  # Gemini Flash 8B (lightweight)
                 "gpt-4o-mini",  # OpenAI GPT-4o mini (requires OPENAI_API_KEY)

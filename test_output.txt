@@ -1,0 +1,13 @@
+================================================================================
+AGENT AURA - INTEGRATION TESTS
+================================================================================
+
+Traceback (most recent call last):
+  File "S:\Courses\Kaggle\Agent_Aura_GIT\tests\test_integration.py", line 176, in <module>
+    test.test_complete_workflow()
+  File "S:\Courses\Kaggle\Agent_Aura_GIT\tests\test_integration.py", line 79, in test_complete_workflow
+    print("\u2713 Complete workflow test passed!")
+  File "C:\Users\sumed\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>

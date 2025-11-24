@@ -31,17 +31,25 @@ class RiskThresholds:
 # FOUNDATION TOOLS (1-4) - Core Functionality
 # ============================================================================
 
-def get_student_data(student_id: str, data_source: str = "./data/student_data.csv"):
+from pathlib import Path
+
+def get_student_data(student_id: str, data_source: str = None):
     """
     Tool 1: Retrieve comprehensive student profile.
     
     Args:
         student_id: Unique identifier for the student
-        data_source: Path to the student data CSV file
+        data_source: Path to the student data CSV file (optional)
         
     Returns:
         Dictionary containing student information or error
     """
+    if data_source is None:
+        # Resolve path relative to this file: agent-aura-backend/app/agent_core/tools.py
+        # We need to go up 4 levels to get to the root, then into data/
+        base_path = Path(__file__).parent.parent.parent.parent
+        data_source = str(base_path / "data" / "student_data.csv")
+
     try:
         # Load student data
         if os.path.exists(data_source):
@@ -79,18 +87,17 @@ def get_student_data(student_id: str, data_source: str = "./data/student_data.cs
         }
 
 
-def analyze_student_risk(student_id: str):
+def analyze_student_risk(student_data: dict):
     """
     Tool 2: Calculate risk score and categorize risk level for a student.
     
     Args:
-        student_id: The unique identifier of the student to analyze (e.g., "S001")
+        student_data: Dictionary containing student information.
         
     Returns:
         Dictionary with risk score, level, and contributing factors
     """
-    # First get the student data
-    student_data = get_student_data(student_id)
+    # First get the student data from argument
     
     if student_data.get("status") == "error":
         return {
@@ -396,19 +403,18 @@ def predict_intervention_success(risk_level: str):
 # ENHANCED TOOLS (5-8) - NEW Functionality
 # ============================================================================
 
-def generate_alert_email(student_id: str):
+def generate_alert_email(student_data: dict, risk_analysis: dict):
     """
     Tool 5 (NEW): Generate professional email notifications for parents/teachers.
     
     Args:
-        student_id: The unique identifier of the student (e.g., "S001")
+        student_data: Dictionary containing student information.
+        risk_analysis: Dictionary with risk score, level, and contributing factors.
         
     Returns:
         Dictionary with email content and metadata
     """
-    # Get student data and risk analysis
-    student_data = get_student_data(student_id)
-    risk_analysis = analyze_student_risk(student_id)
+    # Get student data and risk analysis from arguments
     intervention_plan = generate_intervention_plan(risk_analysis.get("risk_level", "MODERATE"))
     
     risk_level = risk_analysis.get("risk_level", "MODERATE")

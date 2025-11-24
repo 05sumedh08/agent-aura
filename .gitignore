@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/
 lib64/
 parts/
 sdist/
@@ -52,10 +52,16 @@ venv.bak/
 # ============================================================================
 .env
 .env.local
+.env.production
+.env.development
+.env.backup
 *.key
 *.pem
 secrets/
 credentials.json
+
+# Keep example templates
+!.env.example
 
 # ============================================================================
 # Data Files

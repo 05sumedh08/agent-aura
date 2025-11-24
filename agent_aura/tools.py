@@ -31,17 +31,25 @@ class RiskThresholds:
 # FOUNDATION TOOLS (1-4) - Core Functionality
 # ============================================================================
 
-def get_student_data(student_id: str, data_source: str = "./data/student_data.csv"):
+def get_student_data(student_id: str, data_source: str = None):
     """
     Tool 1: Retrieve comprehensive student profile.
     
     Args:
         student_id: Unique identifier for the student
-        data_source: Path to the student data CSV file
+        data_source: Path to the student data CSV file (optional, defaults to project data/student_data.csv)
         
     Returns:
         Dictionary containing student information or error
     """
+    from pathlib import Path
+    
+    # If no data source provided, use project default
+    if data_source is None:
+        # Get project root (parent of agent_aura directory)
+        project_root = Path(__file__).parent.parent
+        data_source = str(project_root / "data" / "student_data.csv")
+    
     try:
         # Load student data
         if os.path.exists(data_source):

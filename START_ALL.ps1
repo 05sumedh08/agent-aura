@@ -2,6 +2,19 @@
 Write-Host "🚀 Starting Agent Aura Complete System..." -ForegroundColor Cyan
 Write-Host ""
 
+# Pre-flight Check: Validate Environment
+Write-Host "🔍 Running Pre-flight Checks..." -ForegroundColor Cyan
+$checkProcess = Start-Process python -ArgumentList "agent-aura-backend/check_env.py" -NoNewWindow -Wait -PassThru
+
+if ($checkProcess.ExitCode -ne 0) {
+    Write-Host ""
+    Write-Host "❌ Pre-flight Check Failed!" -ForegroundColor Red
+    Write-Host "   Please fix the issues listed above before starting the system." -ForegroundColor Yellow
+    Write-Host ""
+    Read-Host "Press Enter to exit"
+    exit
+}
+
 # Check if ports are already in use
 $portCheck = @{
     3000 = "Frontend"

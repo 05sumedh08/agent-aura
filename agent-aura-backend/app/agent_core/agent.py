@@ -179,7 +179,7 @@ class Agent:
                 raise ValueError(f"GEMINI_API_KEY environment variable not set. Tried loading from: {env_path}")
         
         genai.configure(api_key=api_key)
-        model_name = os.getenv("ORCHESTRATOR_MODEL", "gemini-2.0-flash-exp")
+        model_name = os.getenv("ORCHESTRATOR_MODEL", "gemini-3-pro-preview")
         self.model = genai.GenerativeModel(model_name)
         self._gemini_initialized = True
     

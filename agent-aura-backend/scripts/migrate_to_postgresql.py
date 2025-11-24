@@ -54,12 +54,12 @@ class DatabaseMigrator:
             # Test SQLite
             async with self.sqlite_engine.connect() as conn:
                 await conn.execute(text("SELECT 1"))
-            logger.info("✓ SQLite connection successful")
+            logger.info("[OK] SQLite connection successful")
             
             # Test PostgreSQL
             async with self.postgres_engine.connect() as conn:
                 await conn.execute(text("SELECT 1"))
-            logger.info("✓ PostgreSQL connection successful")
+            logger.info("[OK] PostgreSQL connection successful")
             
             return True
         except Exception as e:
@@ -71,7 +71,7 @@ class DatabaseMigrator:
         try:
             async with self.postgres_engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
-            logger.info("✓ PostgreSQL schema created")
+            logger.info("[OK] PostgreSQL schema created")
         except Exception as e:
             logger.error(f"✗ Failed to create schema: {e}")
             raise
@@ -117,7 +117,7 @@ class DatabaseMigrator:
                         migrated += len(batch)
                         logger.info(f"  Migrated {migrated}/{len(rows)} rows")
                 
-                logger.info(f"✓ Completed migration of {table_name}: {migrated} rows")
+                logger.info(f"[OK] Completed migration of {table_name}: {migrated} rows")
                 return migrated
                 
         except Exception as e:
@@ -144,7 +144,7 @@ class DatabaseMigrator:
                 postgres_count = result.scalar()
             
             if sqlite_count == postgres_count:
-                logger.info(f"✓ Verification passed for {table_name}: {postgres_count} rows")
+                logger.info(f"[OK] Verification passed for {table_name}: {postgres_count} rows")
                 return True
             else:
                 logger.warning(
@@ -202,7 +202,7 @@ class DatabaseMigrator:
         logger.info("=" * 60)
         
         if all_verified:
-            logger.info("\n✓ Migration completed successfully!")
+            logger.info("\n[OK] Migration completed successfully!")
             logger.info("\nNext steps:")
             logger.info("1. Update .env to use PostgreSQL DATABASE_URL")
             logger.info("2. Restart backend with production configuration")

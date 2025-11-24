@@ -173,6 +173,29 @@ class ApiClient {
     const response = await this.client.get<{ models: { id: string; provider: string; name: string }[] }>('/api/v1/agent/models');
     return response.data.models;
   }
+
+  // Settings
+  async updateApiKey(apiKey: string): Promise<void> {
+    await this.client.post('/api/v1/settings/apikey', { api_key: apiKey });
+  }
+
+  async removeApiKey(): Promise<void> {
+    await this.client.delete('/api/v1/settings/apikey');
+  }
+
+  async getApiKeyStatus(): Promise<{ is_set: boolean }> {
+    const response = await this.client.get<{ is_set: boolean }>('/api/v1/settings/apikey/status');
+    return response.data;
+  }
+
+  async getAgentConfig(): Promise<{ agents: any[] }> {
+    const response = await this.client.get<{ agents: any[] }>('/api/v1/agent/config');
+    return response.data;
+  }
+
+  async updateAgentConfig(agentId: string, enabled: boolean): Promise<void> {
+    await this.client.post('/api/v1/agent/config', { agent_id: agentId, enabled });
+  }
 }
 
 export const apiClient = new ApiClient();

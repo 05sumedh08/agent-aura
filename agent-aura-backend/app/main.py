@@ -8,15 +8,22 @@ RESTful API with streaming agent responses and role-based access control.
 
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 import json
 import uuid
 import os
+import csv
+import io
 from pathlib import Path
 from dotenv import load_dotenv
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib import colors
 
 # Load environment variables from .env file
 # Get the backend directory (parent of app directory)
@@ -34,7 +41,8 @@ from app.services.auth import (
     authenticate_user, create_access_token, get_current_active_user,
     require_admin, require_teacher, require_student,
     check_student_access, create_user,
-    ACCESS_TOKEN_EXPIRE_MINUTES
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    get_current_active_user_from_query
 )
 from app.services.auth import oauth2_scheme, decode_access_token
 from app.agent_core.agent import Agent
@@ -99,6 +107,16 @@ class AgentGoalRequest(BaseModel):
     session_id: Optional[str] = None
     student_id: Optional[str] = None
     enabled_agents: Optional[List[str]] = None
+    model_override: Optional[str] = None
+
+
+class ApiKeyRequest(BaseModel):
+    api_key: str
+
+
+class AgentConfigUpdate(BaseModel):
+    agent_id: str
+    enabled: bool
 
 
 class StudentResponse(BaseModel):
@@ -392,10 +410,16 @@ async def invoke_agent(
         if match:
             student_id = match.group(0)
         else:
-            student_id = "S001"  # Default for demo
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Student ID must be provided either in the 'student_id' field or in the goal (e.g., 'Analyze student S001')."
+            )
     
     # Create multi-agent orchestrator
-    orchestrator = MultiAgentOrchestrator(enabled_agents=request.enabled_agents)
+    orchestrator = MultiAgentOrchestrator(
+        enabled_agents=request.enabled_agents,
+        model_override=request.model_override
+    )
     
     # Streaming generator
     async def event_generator():
@@ -528,9 +552,196 @@ async def delete_session(
     return {"message": "Session deleted successfully"}
 
 
+@app.delete("/api/v1/sessions/clear-all")
+async def clear_all_sessions(
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """Delete all sessions for the current user."""
+    # Get all user sessions
+    sessions = db.query(AgentSession).filter(
+        AgentSession.user_id == current_user.id
+    ).all()
+    
+    total_deleted = len(sessions)
+    
+    # Delete events for all sessions
+    for session in sessions:
+        db.query(SessionEvent).filter(SessionEvent.session_id == session.id).delete()
+    
+    # Delete all sessions
+    db.query(AgentSession).filter(
+        AgentSession.user_id == current_user.id
+    ).delete()
+    
+    db.commit()
+    
+    return {
+        "message": f"Successfully deleted {total_deleted} session(s)",
+        "deleted_count": total_deleted
+    }
+
+
+@app.get("/api/v1/sessions/{session_id}/export/pdf")
+async def export_session_pdf(
+    session_id: str,
+    current_user: User = Depends(get_current_active_user_from_query),
+    db: Session = Depends(get_db)
+):
+    """Export session as PDF report."""
+    # Get session
+    session = db.query(AgentSession).filter(
+        AgentSession.session_id == session_id,
+        AgentSession.user_id == current_user.id
+    ).first()
+    
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    # Get events
+    events = db.query(SessionEvent).filter(
+        SessionEvent.session_id == session.id
+    ).order_by(SessionEvent.sequence_number).all()
+    
+    # Create PDF in memory
+    pdf_buffer = io.BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    story = []
+    styles = getSampleStyleSheet()
+    
+    # Title
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        textColor=colors.HexColor('#4F46E5'),
+        spaceAfter=30,
+    )
+    story.append(Paragraph("Agent Aura - Session Report", title_style))
+    story.append(Spacer(1, 0.2*inch))
+    
+    # Session Info
+    info_data = [
+        ["Session ID:", session.session_id],
+        ["Goal:", session.goal],
+        ["Status:", session.status.upper()],
+        ["Created:", session.created_at.strftime("%Y-%m-%d %H:%M:%S")],
+        ["Completed:", session.completed_at.strftime("%Y-%m-%d %H:%M:%S") if session.completed_at else "N/A"],
+    ]
+    
+    info_table = Table(info_data, colWidths=[2*inch, 4.5*inch])
+    info_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#F3F4F6')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+    ]))
+    story.append(info_table)
+    story.append(Spacer(1, 0.3*inch))
+    
+    # Agent Trajectory
+    story.append(Paragraph("Agent Trajectory", styles['Heading2']))
+    story.append(Spacer(1, 0.1*inch))
+    
+    for event in events:
+        event_style = ParagraphStyle(
+            'EventStyle',
+            parent=styles['Normal'],
+            fontSize=9,
+            leftIndent=10,
+            spaceAfter=8,
+        )
+        
+        event_type = event.event_type.upper()
+        content = event.content or event.tool_name or "N/A"
+        timestamp = event.timestamp.strftime("%H:%M:%S")
+        
+        event_text = f"<b>[{timestamp}] {event_type}:</b> {content}"
+        story.append(Paragraph(event_text, event_style))
+    
+    # Build PDF
+    doc.build(story)
+    pdf_buffer.seek(0)
+    
+    # Return PDF file
+    filename = f"agent_aura_session_{session_id[:8]}.pdf"
+    return StreamingResponse(
+        pdf_buffer,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
+
+
+@app.get("/api/v1/sessions/{session_id}/export/csv")
+async def export_session_csv(
+    session_id: str,
+    current_user: User = Depends(get_current_active_user_from_query),
+    db: Session = Depends(get_db)
+):
+    """Export session as CSV report."""
+    # Get session
+    session = db.query(AgentSession).filter(
+        AgentSession.session_id == session_id,
+        AgentSession.user_id == current_user.id
+    ).first()
+    
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    # Get events
+    events = db.query(SessionEvent).filter(
+        SessionEvent.session_id == session.id
+    ).order_by(SessionEvent.sequence_number).all()
+    
+    # Create CSV in memory
+    csv_buffer = io.StringIO()
+    writer = csv.writer(csv_buffer)
+    
+    # Write header
+    writer.writerow([
+        "Sequence",
+        "Timestamp",
+        "Event Type",
+        "Tool Name",
+        "Content"
+    ])
+    
+    # Write events
+    for event in events:
+        writer.writerow([
+            event.sequence_number,
+            event.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+            event.event_type,
+            event.tool_name or "",
+            event.content or ""
+        ])
+    
+    # Return CSV
+    csv_buffer.seek(0)
+    filename = f"agent_aura_session_{session_id[:8]}.csv"
+    
+    return StreamingResponse(
+        iter([csv_buffer.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
+
+
 # ============================================================================
 # Agent Configuration Endpoints
 # ============================================================================
+
+# Global Agent Configuration State
+AGENT_CONFIG = {
+    "data_collection": {"name": "Data Collection Agent", "description": "Retrieves comprehensive student profile and academic data", "enabled": True},
+    "risk_analysis": {"name": "Risk Analysis Agent", "description": "Evaluates student risk level and identifies warning indicators", "enabled": True},
+    "notification_generation": {"name": "Notification Agent", "description": "Generates automated email notifications for stakeholders", "enabled": True},
+    "intervention_planning": {"name": "Intervention Planning Agent", "description": "Designs personalized intervention strategies", "enabled": True},
+    "outcome_prediction": {"name": "Outcome Prediction Agent", "description": "Forecasts intervention success probability", "enabled": True}
+}
 
 @app.get("/api/v1/agent/config")
 async def get_agent_config(
@@ -540,31 +751,114 @@ async def get_agent_config(
     return {
         "agents": [
             {
-                "id": "data_collection",
-                "name": "Data Collection Agent",
-                "description": "Retrieves comprehensive student profile and academic data",
-                "enabled": True
-            },
-            {
-                "id": "risk_analysis",
-                "name": "Risk Analysis Agent",
-                "description": "Evaluates student risk level and identifies warning indicators",
-                "enabled": True
-            },
-            {
-                "id": "intervention_planning",
-                "name": "Intervention Planning Agent",
-                "description": "Designs personalized intervention strategies",
-                "enabled": True
-            },
-            {
-                "id": "outcome_prediction",
-                "name": "Outcome Prediction Agent",
-                "description": "Forecasts intervention success probability",
-                "enabled": True
+                "id": agent_id,
+                "name": config["name"],
+                "description": config["description"],
+                "enabled": config["enabled"]
             }
+            for agent_id, config in AGENT_CONFIG.items()
         ]
     }
+
+
+@app.post("/api/v1/agent/config")
+async def update_agent_config(
+    config_update: AgentConfigUpdate,
+    current_user: User = Depends(require_admin)
+):
+    """Update agent status (Admin only)."""
+    if config_update.agent_id not in AGENT_CONFIG:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    
+    AGENT_CONFIG[config_update.agent_id]["enabled"] = config_update.enabled
+    return {"message": "Agent configuration updated", "agent_id": config_update.agent_id, "enabled": config_update.enabled}
+
+
+@app.post("/api/v1/settings/apikey")
+async def update_api_key(
+    request: ApiKeyRequest,
+    current_user: User = Depends(require_admin)
+):
+    """Update Gemini API Key."""
+    # Update environment variable
+    os.environ["GEMINI_API_KEY"] = request.api_key
+    
+    # Update .env file if it exists
+    if env_path.exists():
+        try:
+            # Read current content
+            with open(env_path, "r") as f:
+                lines = f.readlines()
+            
+            # Update or append key
+            key_found = False
+            new_lines = []
+            for line in lines:
+                if line.startswith("GEMINI_API_KEY="):
+                    new_lines.append(f"GEMINI_API_KEY={request.api_key}\n")
+                    key_found = True
+                else:
+                    new_lines.append(line)
+            
+            if not key_found:
+                new_lines.append(f"\nGEMINI_API_KEY={request.api_key}\n")
+                
+            with open(env_path, "w") as f:
+                f.writelines(new_lines)
+                
+        except Exception as e:
+            print(f"Error updating .env file: {e}")
+            
+    # Re-initialize model manager
+    try:
+        from app.agent_core.model_manager import model_manager
+        model_manager.initialize()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to initialize models with new key: {str(e)}")
+        
+    return {"message": "API Key updated successfully"}
+
+
+@app.delete("/api/v1/settings/apikey")
+async def remove_api_key(
+    current_user: User = Depends(require_admin)
+):
+    """Remove Gemini API Key."""
+    if "GEMINI_API_KEY" in os.environ:
+        del os.environ["GEMINI_API_KEY"]
+        
+    # Update .env file
+    if env_path.exists():
+        try:
+            with open(env_path, "r") as f:
+                lines = f.readlines()
+            
+            with open(env_path, "w") as f:
+                for line in lines:
+                    if not line.startswith("GEMINI_API_KEY="):
+                        f.write(line)
+        except Exception as e:
+            print(f"Error updating .env file: {e}")
+            
+    return {"message": "API Key removed successfully"}
+
+
+@app.get("/api/v1/settings/apikey/status")
+async def get_api_key_status(
+    current_user: User = Depends(require_admin)
+):
+    """Check if API Key is set."""
+    is_set = "GEMINI_API_KEY" in os.environ and os.environ["GEMINI_API_KEY"]
+    return {"is_set": is_set}
+
+
+@app.get("/api/v1/agent/models")
+async def get_available_models(
+    current_user: User = Depends(get_current_active_user)
+):
+    """Get list of available LLM models."""
+    from app.agent_core.model_manager import model_manager
+    return {"models": model_manager.get_available_models()}
 
 
 # ============================================================================

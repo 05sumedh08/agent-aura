@@ -76,7 +76,7 @@ class TestIntegration:
         assert progress["tracking_success"] == True
         assert progress["student_id"] == student_data["student_id"]
         
-        print("✓ Complete workflow test passed!")
+        print("[OK] Complete workflow test passed!")
     
     def test_multiple_students_batch(self):
         """Test batch processing of multiple students."""
@@ -111,7 +111,7 @@ class TestIntegration:
         assert len(results) == len(student_ids)
         assert all(r["tracking"] for r in results)
         
-        print(f"✓ Batch processing test passed! Processed {len(results)} students")
+        print(f"[OK] Batch processing test passed! Processed {len(results)} students")
     
     def test_progress_timeline_retrieval(self):
         """Test retrieving progress timeline after tracking."""
@@ -137,7 +137,7 @@ class TestIntegration:
         assert "progress_history" in timeline
         assert len(timeline["progress_history"]) == 3
         
-        print("✓ Progress timeline test passed!")
+        print("[OK] Progress timeline test passed!")
     
     def test_visualization_data_export(self):
         """Test exporting visualization data."""
@@ -161,7 +161,7 @@ class TestIntegration:
         assert "chart_data" in viz_data
         assert "summary" in viz_data
         
-        print("✓ Visualization export test passed!")
+        print("[OK] Visualization export test passed!")
 
 
 if __name__ == "__main__":
@@ -186,5 +186,5 @@ if __name__ == "__main__":
     print()
     
     print("="*80)
-    print("✅ ALL INTEGRATION TESTS PASSED!")
+    print("[SUCCESS] ALL INTEGRATION TESTS PASSED!")
     print("="*80)
