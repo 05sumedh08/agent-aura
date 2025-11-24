@@ -3,17 +3,9 @@
 import { useState, useEffect } from 'react';
 import { Users, TrendingUp, AlertCircle, CheckCircle, BookOpen, Award } from 'lucide-react';
 import { apiClient } from '@/lib/api';
+import { Student } from '@/lib/types';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import RiskBadge from '@/components/RiskBadge';
-
-interface Student {
-  student_id: string;
-  name: string;
-  grade_level: number;
-  gpa: number;
-  attendance_rate: number;
-  overall_performance: string;
-}
 
 interface TeacherStats {
   totalStudents: number;
@@ -48,31 +40,31 @@ export default function TeachersPage() {
       setLoading(true);
       const data = await apiClient.getAllStudents();
       setStudents(data);
-      
+
       // Calculate statistics
       const total = data.length;
       const avgGPA = data.reduce((sum, s) => sum + s.gpa, 0) / total;
-      const avgAttendance = data.reduce((sum, s) => sum + s.attendance_rate, 0) / total;
-      
+      const avgAttendance = data.reduce((sum, s) => sum + s.attendance, 0) / total;
+
       // Calculate risk levels based on GPA and attendance
       let critical = 0, high = 0, moderate = 0, low = 0;
       data.forEach(s => {
-        if (s.gpa < 2.0 || s.attendance_rate < 0.75) critical++;
-        else if (s.gpa < 2.5 || s.attendance_rate < 0.85) high++;
-        else if (s.gpa < 3.0 || s.attendance_rate < 0.90) moderate++;
+        if (s.gpa < 2.0 || s.attendance < 75) critical++;
+        else if (s.gpa < 2.5 || s.attendance < 85) high++;
+        else if (s.gpa < 3.0 || s.attendance < 90) moderate++;
         else low++;
       });
-      
+
       setStats({
         totalStudents: total,
         avgGPA: parseFloat(avgGPA.toFixed(2)),
-        avgAttendance: parseFloat((avgAttendance * 100).toFixed(1)),
+        avgAttendance: parseFloat(avgAttendance.toFixed(1)),
         criticalRisk: critical,
         highRisk: high,
         moderateRisk: moderate,
         lowRisk: low
       });
-      
+
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load teacher data');
@@ -82,10 +74,17 @@ export default function TeachersPage() {
   }
 
   function getRiskLevel(student: Student): 'CRITICAL' | 'HIGH' | 'MODERATE' | 'LOW' {
-    if (student.gpa < 2.0 || student.attendance_rate < 0.75) return 'CRITICAL';
-    if (student.gpa < 2.5 || student.attendance_rate < 0.85) return 'HIGH';
-    if (student.gpa < 3.0 || student.attendance_rate < 0.90) return 'MODERATE';
+    if (student.gpa < 2.0 || student.attendance < 75) return 'CRITICAL';
+    if (student.gpa < 2.5 || student.attendance < 85) return 'HIGH';
+    if (student.gpa < 3.0 || student.attendance < 90) return 'MODERATE';
     return 'LOW';
+  }
+
+  function getPerformanceCategory(gpa: number): string {
+    if (gpa >= 3.5) return 'Excellent';
+    if (gpa >= 3.0) return 'Good';
+    if (gpa >= 2.5) return 'Average';
+    return 'Below Average';
   }
 
   if (loading) {
@@ -190,7 +189,7 @@ export default function TeachersPage() {
           <BookOpen className="w-6 h-6" />
           My Students ({students.length})
         </h2>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -206,7 +205,7 @@ export default function TeachersPage() {
             </thead>
             <tbody>
               {students.map((student) => (
-                <tr 
+                <tr
                   key={student.student_id}
                   className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                 >
@@ -214,32 +213,30 @@ export default function TeachersPage() {
                     {student.student_id}
                   </td>
                   <td className="py-3 px-4 text-gray-900 dark:text-white font-medium">
-                    {student.name}
+                    {student.full_name}
                   </td>
                   <td className="py-3 px-4 text-center text-gray-700 dark:text-gray-300">
-                    {student.grade_level}
+                    {student.grade}
                   </td>
                   <td className="py-3 px-4 text-center">
-                    <span className={`font-semibold ${
-                      student.gpa >= 3.5 ? 'text-green-600' :
-                      student.gpa >= 3.0 ? 'text-blue-600' :
-                      student.gpa >= 2.5 ? 'text-yellow-600' :
-                      'text-red-600'
-                    }`}>
+                    <span className={`font-semibold ${student.gpa >= 3.5 ? 'text-green-600' :
+                        student.gpa >= 3.0 ? 'text-blue-600' :
+                          student.gpa >= 2.5 ? 'text-yellow-600' :
+                            'text-red-600'
+                      }`}>
                       {student.gpa.toFixed(2)}
                     </span>
                   </td>
                   <td className="py-3 px-4 text-center">
-                    <span className={`font-semibold ${
-                      student.attendance_rate >= 0.90 ? 'text-green-600' :
-                      student.attendance_rate >= 0.85 ? 'text-yellow-600' :
-                      'text-red-600'
-                    }`}>
-                      {(student.attendance_rate * 100).toFixed(0)}%
+                    <span className={`font-semibold ${student.attendance >= 90 ? 'text-green-600' :
+                        student.attendance >= 85 ? 'text-yellow-600' :
+                          'text-red-600'
+                      }`}>
+                      {student.attendance.toFixed(0)}%
                     </span>
                   </td>
                   <td className="py-3 px-4 text-center text-gray-700 dark:text-gray-300">
-                    {student.overall_performance}
+                    {getPerformanceCategory(student.gpa)}
                   </td>
                   <td className="py-3 px-4 text-center">
                     <RiskBadge level={getRiskLevel(student)} />

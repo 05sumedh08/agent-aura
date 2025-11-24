@@ -56,16 +56,15 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 h-screen bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 z-50 transition-transform ${
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        } w-64`}
+        className={`fixed lg:sticky top-0 left-0 h-screen bg-[#0f0a1e]/95 dark:bg-[#0f0a1e]/95 backdrop-blur-xl border-r border-white/10 z-50 transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          } w-64`}
       >
         <div className="flex flex-col h-full p-4">
           {/* Close button for mobile */}
           {onClose && (
             <button
               onClick={onClose}
-              className="lg:hidden self-end p-2 glass rounded-xl mb-4"
+              className="lg:hidden self-end p-2 glass rounded-xl mb-4 text-gray-400 hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
@@ -82,25 +81,24 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                     router.push(item.path);
                     onClose?.();
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                    isActive
-                      ? 'bg-gradient-to-r from-aura-primary to-aura-secondary text-white shadow-lg'
-                      : 'glass hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
-                  }`}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
+                      ? 'bg-gradient-to-r from-aura-primary to-aura-secondary text-white shadow-lg shadow-purple-500/50 border border-purple-400/30'
+                      : 'text-gray-300 hover:bg-white/10 hover:text-white hover:shadow-md'
+                    }`}
                 >
-                  <item.icon className="w-5 h-5" />
-                  <span className="font-medium">{item.label}</span>
+                  <item.icon className={`w-5 h-5 transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                  <span className="font-semibold text-base">{item.label}</span>
                 </button>
               );
             })}
           </nav>
 
           {/* Footer */}
-          <div className="glass rounded-xl p-4 text-center">
-            <p className="text-xs text-gray-600 dark:text-gray-400">
+          <div className="glass rounded-xl p-4 text-center border border-white/10 bg-white/5">
+            <p className="text-sm text-gray-200 font-bold">
               Agent Aura v2.0
             </p>
-            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+            <p className="text-xs text-gray-300 mt-1 font-semibold">
               Powered by AI
             </p>
           </div>

@@ -1,0 +1,35 @@
+app/admin/agent/page.tsx(74,9): error TS2353: Object literal may only specify known properties, and 'enabled_agents' does not exist in type 'AgentRequest'.
+app/admin/analytics/page.tsx(63,19): error TS2345: Argument of type 'Student[]' is not assignable to parameter of type 'SetStateAction<Student[]>'.
+  Type 'import("S:/Courses/Kaggle/Agent_Aura_GIT/agent-aura-frontend/lib/types").Student[]' is not assignable to type 'Student[]'.
+    Type 'Student' is missing the following properties from type 'Student': name, grade_level, attendance_rate, overall_performance
+app/admin/analytics/page.tsx(68,61): error TS2551: Property 'attendance_rate' does not exist on type 'Student'. Did you mean 'attendance'?
+app/admin/analytics/page.tsx(73,30): error TS2551: Property 'attendance_rate' does not exist on type 'Student'. Did you mean 'attendance'?
+app/admin/analytics/page.tsx(74,35): error TS2551: Property 'attendance_rate' does not exist on type 'Student'. Did you mean 'attendance'?
+app/admin/analytics/page.tsx(75,35): error TS2551: Property 'attendance_rate' does not exist on type 'Student'. Did you mean 'attendance'?
+app/admin/analytics/page.tsx(82,21): error TS2339: Property 'grade_level' does not exist on type 'Student'.
+app/admin/analytics/page.tsx(82,49): error TS2339: Property 'grade_level' does not exist on type 'Student'.
+app/admin/analytics/page.tsx(88,20): error TS2339: Property 'overall_performance' does not exist on type 'Student'.
+app/admin/analytics/page.tsx(88,55): error TS2339: Property 'overall_performance' does not exist on type 'Student'.
+app/admin/teachers/page.tsx(50,19): error TS2345: Argument of type 'Student[]' is not assignable to parameter of type 'SetStateAction<Student[]>'.
+  Type 'import("S:/Courses/Kaggle/Agent_Aura_GIT/agent-aura-frontend/lib/types").Student[]' is not assignable to type 'Student[]'.
+    Type 'Student' is missing the following properties from type 'Student': name, grade_level, attendance_rate, overall_performance
+app/admin/teachers/page.tsx(55,61): error TS2551: Property 'attendance_rate' does not exist on type 'Student'. Did you mean 'attendance'?
+app/admin/teachers/page.tsx(60,30): error TS2551: Property 'attendance_rate' does not exist on type 'Student'. Did you mean 'attendance'?
+app/admin/teachers/page.tsx(61,35): error TS2551: Property 'attendance_rate' does not exist on type 'Student'. Did you mean 'attendance'?
+app/admin/teachers/page.tsx(62,35): error TS2551: Property 'attendance_rate' does not exist on type 'Student'. Did you mean 'attendance'?
+components/EventCard.tsx(16,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"agent_start"' have no overlap.
+components/EventCard.tsx(16,41): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"agent_complete"' have no overlap.
+components/EventCard.tsx(24,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"orchestrator_thought"' have no overlap.
+components/EventCard.tsx(25,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"final_report"' have no overlap.
+components/EventCard.tsx(44,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"agent_start"' have no overlap.
+components/EventCard.tsx(45,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"agent_complete"' have no overlap.
+components/EventCard.tsx(46,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"orchestrator_thought"' have no overlap.
+components/EventCard.tsx(47,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"final_report"' have no overlap.
+components/EventCard.tsx(66,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"agent_start"' have no overlap.
+components/EventCard.tsx(67,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"agent_complete"' have no overlap.
+components/EventCard.tsx(68,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"orchestrator_thought"' have no overlap.
+components/EventCard.tsx(69,9): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"final_report"' have no overlap.
+components/EventCard.tsx(118,10): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"agent_start"' have no overlap.
+components/EventCard.tsx(127,10): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"agent_complete"' have no overlap.
+components/EventCard.tsx(139,10): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"orchestrator_thought"' have no overlap.
+components/EventCard.tsx(148,10): error TS2367: This comparison appears to be unintentional because the types '"error" | "thought" | "action" | "observation" | "response" | "session_start"' and '"final_report"' have no overlap.

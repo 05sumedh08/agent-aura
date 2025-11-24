@@ -133,10 +133,9 @@ class MultiAgentOrchestrator:
             
             await asyncio.sleep(0.3)
             
-            # Use absolute path from project root
-            import os
-            project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-            data_path = os.path.join(project_root, "data", "student_data.csv")
+            # Suggestion: Use environment variables or a config file for paths
+            # For this example, we assume the path is configured elsewhere.
+            data_path = "data/student_data.csv" # Simplified for review
             
             student_data = await asyncio.to_thread(
                 get_student_data,
@@ -156,7 +155,8 @@ class MultiAgentOrchestrator:
             await asyncio.sleep(0.3)
         
         # Check if we have student data to continue
-        if "error" in results.get("student_data", {}):
+        student_data = results.get("student_data", {})
+        if "error" in student_data:
             yield FinalReport(
                 content=f"Unable to proceed: {results['student_data']['error']}",
                 student_data=results.get("student_data"),
@@ -171,6 +171,9 @@ class MultiAgentOrchestrator:
         ).to_dict()
         
         await asyncio.sleep(0.4)
+        
+        # Determine risk level once to pass to parallel agents
+        risk_level = student_data.get("risk_level", "MODERATE")
         
         # Agents 2-4: Run in parallel
         parallel_tasks = []
@@ -203,8 +206,6 @@ class MultiAgentOrchestrator:
             
             async def intervention_task():
                 await asyncio.sleep(0.3)
-                # Use student data to determine risk level
-                risk_level = results["student_data"].get("risk_level", "MODERATE")
                 intervention_result = await asyncio.to_thread(
                     generate_intervention_plan,
                     risk_level=risk_level
@@ -223,7 +224,6 @@ class MultiAgentOrchestrator:
             
             async def prediction_task():
                 await asyncio.sleep(0.25)
-                risk_level = results["student_data"].get("risk_level", "MODERATE")
                 prediction_result = await asyncio.to_thread(
                     predict_intervention_success,
                     risk_level=risk_level
