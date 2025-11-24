@@ -1,6 +1,31 @@
 # 📚 Agent Aura - Updated Documentation Summary
 
-## 🎯 What's Been Updated
+## 🚀 Recent Feature Updates (v2.1)
+
+### 1. Enhanced Landing Page
+The application now features a fully responsive, glassmorphism-themed landing page that serves as the entry point for all users.
+
+- **New Components**:
+    - **Hero Section**: Engaging introduction with "Get Started" call-to-action.
+    - **Features Grid**: Showcasing key capabilities (Real-time Analytics, AI Insights).
+    - **About & Contact**: Detailed project information and support channels.
+    - **Navbar**: Includes GitHub repository link and dynamic Login/Dashboard access.
+- **Routing**: Replaced automatic redirects with a user-controlled entry flow.
+
+### 2. Admin Settings & Configuration
+A robust settings management system has been implemented for administrators.
+
+- **API Key Management**:
+    - **Secure UI**: Add, update, or remove the Gemini API Key directly from the dashboard.
+    - **Status Indicator**: Real-time check of API key configuration.
+    - **Security**: Keys are masked in the UI and securely stored in the backend environment.
+- **Agent Control System**:
+    - **Toggle Agents**: Enable or disable specific AI agents (Data Collection, Risk Analysis, etc.) on the fly.
+    - **Dynamic Config**: Backend immediately respects changes without restart.
+
+---
+
+## 🎯 Previous Updates (v2.0 Security)
 
 ### ✅ Security Enhancements
 
@@ -25,11 +50,11 @@
 ```
 agent-aura/
 ├── README.md                    # Main project documentation (updated)
-├── SECURITY.md                  # NEW: Security best practices
-├── .env.example                 # NEW: Root environment template
+├── SECURITY.md                  # Security best practices
+├── .env.example                 # Root environment template
 ├── .gitignore                   # Updated: Better secret protection
 ├── agent-aura-backend/
-│   └── .env.example            # NEW: Backend environment template
+│   └── .env.example            # Backend environment template
 └── docs/
     ├── deployment/
     │   ├── PRODUCTION_DEPLOYMENT.md

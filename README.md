@@ -60,6 +60,12 @@
 - **PostgreSQL Database** - Production-grade data storage with connection pooling
 - **JWT Authentication** - Secure user management with role-based access
 - **Real-time Streaming** - Server-Sent Events (SSE) for live agent updates
+- **Admin Settings** - Dynamic API key management and agent control
+
+### 🎨 Enhanced UI/UX
+- **New Landing Page** - Modern glassmorphism entry point with project info
+- **Responsive Design** - Optimized for all devices
+- **Glass Box Interface** - Transparent AI reasoning visualization
 
 ### 🚀 Multi-Agent Orchestration
 - **4 Specialized Agents** working in parallel using `asyncio.gather()`
@@ -71,7 +77,9 @@
 - **Teacher Dashboard** - Class statistics, risk distribution, student table
 - **Analytics Dashboard** - System-wide metrics with interactive charts
 - **Student Dashboard** - Individual student profiles and history
+- **Student Dashboard** - Individual student profiles and history
 - **Admin Panel** - Agent configuration and system controls
+- **Settings Page** - API Key management and Agent toggles
 
 ### 🌐 Chrome Extension
 - **School System Integration** - Works with Schoology, Canvas, Blackboard, Moodle, PowerSchool
