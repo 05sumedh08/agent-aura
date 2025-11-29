@@ -11,7 +11,7 @@ from google.adk.agents import Agent
 from google.adk.tools import FunctionTool
 
 from .config import config
-from .model_manager import model_manager
+# model_manager import removed to avoid unused import warning
 from .sub_agents import (
     data_collection_agent,
     risk_analysis_agent,

@@ -8,7 +8,6 @@ Coordinates parallel execution of 4 specialized agents with Glass Box visibility
 """
 
 import asyncio
-import os
 from typing import AsyncGenerator, Dict, List, Optional
 from datetime import datetime
 from dataclasses import dataclass, asdict
@@ -98,7 +97,7 @@ class MultiAgentOrchestrator:
         """
         self.all_agents = [
             "data_collection",
-            "risk_analysis", 
+            "risk_analysis",
             "notification_generation",
             "intervention_planning",
             "outcome_prediction",
@@ -284,7 +283,7 @@ class MultiAgentOrchestrator:
                 timestamp=datetime.utcnow().isoformat()
             ).to_dict()
 
-            await asyncio.sleep(0.1) # Simulate agent startup
+            await asyncio.sleep(0.1)  # Simulate agent startup
             email_result = await asyncio.to_thread(
                 generate_alert_email,
                 student_data=student_data,
@@ -310,8 +309,6 @@ class MultiAgentOrchestrator:
         # Build final report
         report_sections = []
         
-        report_sections.append("# 🤖 AGENT AURA - COMPREHENSIVE STUDENT ANALYSIS REPORT")
-        report_sections.append(f"Student ID: {student_id}")
         report_sections.append(f"Analysis Date: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}")
         report_sections.append("")
         

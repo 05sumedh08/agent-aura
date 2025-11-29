@@ -16,10 +16,14 @@ from sqlalchemy.orm import Session
 
 from app.models.database import User, UserRole, get_db
 
+from app.config import get_settings
+
+settings = get_settings()
+
 # Security configuration
-SECRET_KEY = "your-secret-key-change-in-production-use-env-variable"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 

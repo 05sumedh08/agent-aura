@@ -1,0 +1,85 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "type": "dashboard",
+        "name": "Annotations & Alerts",
+        "hide": true,
+        "enable": true,
+        "iconColor": "rgba(255, 96, 96, 1)"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Request Count",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(agent_aura_request_count)",
+          "legendFormat": "requests",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        }
+      },
+      "gridPos": {"h": 6, "w": 8, "x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "type": "bargauge",
+      "title": "Agent Invocations by Status",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum by(status)(agent_aura_agent_invocations_total)",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 8, "x": 8, "y": 0}
+    },
+    {
+      "id": 3,
+      "type": "graph",
+      "title": "Analysis Latency (p50/p90)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum(rate(agent_aura_analysis_latency_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.9, sum(rate(agent_aura_analysis_latency_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p90",
+          "refId": "B"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 16, "x": 0, "y": 6}
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["agent-aura"],
+  "templating": {"list": []},
+  "time": {"from": "now-6h", "to": "now"},
+  "timepicker": {},
+  "timezone": "",
+  "title": "Agent Aura Overview",
+  "version": 1
+}

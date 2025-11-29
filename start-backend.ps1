@@ -4,7 +4,7 @@
 Write-Host "🚀 Starting Agent Aura Backend..." -ForegroundColor Cyan
 
 # Set environment variables
-$env:DATABASE_URL = "postgresql://agent_aura:agent_aura_password@localhost:5432/agent_aura_db"
+# $env:DATABASE_URL = "postgresql://agent_aura:agent_aura_password@localhost:5432/agent_aura_db"
 $env:SECRET_KEY = "your-secret-key-change-in-production-use-env-variable-min-32-characters-long"
 $env:GEMINI_API_KEY = "dummy-key-for-testing"
 

@@ -17,7 +17,7 @@ from dataclasses import dataclass, asdict
 try:
     import google.generativeai as genai
     GEMINI_AVAILABLE = True
-except Exception as e:
+except Exception:
     GEMINI_AVAILABLE = False
     genai = None
 
@@ -271,8 +271,8 @@ Available Tools:
             # Call the tool
             result = tool_func(**arguments)
             return result
-        except Exception as e:
-            return {"error": str(e)}
+        except Exception:
+            return {"error": "An error occurred while executing the tool."}
     
     async def run(
         self,

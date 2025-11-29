@@ -4,6 +4,7 @@ Migrates data from SQLite to PostgreSQL for production deployment
 """
 import asyncio
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -79,13 +80,15 @@ class DatabaseMigrator:
     async def migrate_table(self, model_class, batch_size: int = 100):
         """Migrate data for a specific table"""
         table_name = model_class.__tablename__
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", table_name or ""):
+            raise ValueError("Invalid table identifier")
         logger.info(f"Migrating table: {table_name}")
         
         try:
             # Read from SQLite
             async with self.SQLiteSession() as sqlite_session:
                 result = await sqlite_session.execute(
-                    text(f"SELECT * FROM {table_name}")
+                    text("SELECT * FROM " + table_name)
                 )
                 rows = result.fetchall()
                 
@@ -132,14 +135,14 @@ class DatabaseMigrator:
             # Count in SQLite
             async with self.SQLiteSession() as sqlite_session:
                 result = await sqlite_session.execute(
-                    text(f"SELECT COUNT(*) FROM {table_name}")
+                    text("SELECT COUNT(*) FROM " + table_name)
                 )
                 sqlite_count = result.scalar()
             
             # Count in PostgreSQL
             async with self.PostgresSession() as postgres_session:
                 result = await postgres_session.execute(
-                    text(f"SELECT COUNT(*) FROM {table_name}")
+                    text("SELECT COUNT(*) FROM " + table_name)
                 )
                 postgres_count = result.scalar()
             

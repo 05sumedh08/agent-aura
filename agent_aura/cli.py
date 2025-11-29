@@ -7,7 +7,6 @@ Provides easy access to all agent functionality from the terminal.
 """
 
 import argparse
-import json
 import sys
 import os
 from typing import List
@@ -22,15 +21,11 @@ from agent_aura.tools import (
     predict_intervention_success,
     generate_alert_email,
     track_student_progress,
-    get_student_progress_timeline,
-    export_progress_visualization_data,
     save_notifications_to_file,
     save_progress_database_to_file,
     export_summary_report
 )
 from agent_aura.utils import (
-    format_risk_summary,
-    format_intervention_summary,
     get_risk_level_emoji
 )
 
@@ -38,9 +33,9 @@ from agent_aura.utils import (
 def analyze_student(student_id: str, data_file: str = "./data/student_data.csv", verbose: bool = False):
     """Analyze a single student and generate complete report."""
     
-    print(f"\n{'='*80}")
-    print(f"AGENT AURA - STUDENT ANALYSIS")
-    print(f"{'='*80}\n")
+    print("\n" + ('='*80))
+    print("AGENT AURA - STUDENT ANALYSIS")
+    print(('='*80) + "\n")
     
     # Step 1: Data Collection
     print(f"[1/6] Collecting data for student {student_id}...")
@@ -57,7 +52,7 @@ def analyze_student(student_id: str, data_file: str = "./data/student_data.csv",
         print(f"  Performance: {student_data['performance']}")
     
     # Step 2: Risk Analysis
-    print(f"\n[2/6] Analyzing risk factors...")
+    print("\n[2/6] Analyzing risk factors...")
     risk_analysis = analyze_student_risk(student_id)
     
     emoji = get_risk_level_emoji(risk_analysis["risk_level"])
@@ -69,21 +64,21 @@ def analyze_student(student_id: str, data_file: str = "./data/student_data.csv",
             print(f"    • {factor}")
     
     # Step 3: Intervention Planning
-    print(f"\n[3/6] Generating intervention plan...")
+    print("\n[3/6] Generating intervention plan...")
     plan = generate_intervention_plan(risk_analysis["risk_level"])
     print(f"[OK] Plan Type: {plan['type']}")
     print(f"  Duration: {plan['duration_weeks']} weeks")
     print(f"  Frequency: {plan['frequency']}")
     
     # Step 4: Success Prediction
-    print(f"\n[4/6] Predicting intervention success...")
+    print("\n[4/6] Predicting intervention success...")
     prediction = predict_intervention_success(risk_analysis["risk_level"])
     print(f"[OK] Expected Success Rate: {prediction['base_success_rate']}%")
     print(f"  Confidence: {prediction['confidence_level']}%")
     print(f"  Timeline: {prediction['timeline_weeks']} weeks")
     
     # Step 5: Generate Notification (if needed)
-    print(f"\n[5/6] Checking notification requirements...")
+    print("\n[5/6] Checking notification requirements...")
     if risk_analysis["risk_level"] in ["CRITICAL", "HIGH"]:
         email = generate_alert_email(student_id)
         print(f"[OK] Notification generated: {email['priority']} priority")
@@ -93,7 +88,7 @@ def analyze_student(student_id: str, data_file: str = "./data/student_data.csv",
         print(f"[OK] No immediate notification required")
     
     # Step 6: Track Progress
-    print(f"\n[6/6] Tracking progress...")
+    print("\n[6/6] Tracking progress...")
     progress = track_student_progress(
         student_id,
         risk_analysis["risk_level"],
@@ -102,17 +97,17 @@ def analyze_student(student_id: str, data_file: str = "./data/student_data.csv",
     )
     print(f"[OK] Progress tracked: {progress['trend']}")
     
-    print(f"\n{'='*80}")
-    print(f"✅ ANALYSIS COMPLETE")
-    print(f"{'='*80}\n")
+    print("\n" + ('='*80))
+    print("✅ ANALYSIS COMPLETE")
+    print(('='*80) + "\n")
 
 
 def batch_analyze(student_ids: List[str], data_file: str = "./data/student_data.csv"):
     """Batch analyze multiple students."""
     
-    print(f"\n{'='*80}")
-    print(f"AGENT AURA - BATCH ANALYSIS")
-    print(f"{'='*80}\n")
+    print("\n" + ('='*80))
+    print("AGENT AURA - BATCH ANALYSIS")
+    print(('='*80) + "\n")
     print(f"Analyzing {len(student_ids)} students...\n")
     
     results = []
@@ -159,9 +154,9 @@ def batch_analyze(student_ids: List[str], data_file: str = "./data/student_data.
         level = r["risk_level"]
         risk_dist[level] = risk_dist.get(level, 0) + 1
     
-    print(f"\n{'='*80}")
-    print(f"SUMMARY")
-    print(f"{'='*80}")
+    print("\n" + ('='*80))
+    print("SUMMARY")
+    print(('='*80))
     print(f"Total Analyzed: {len(results)}")
     print(f"Notifications Sent: {notifications}")
     print(f"\nRisk Distribution:")
@@ -170,15 +165,15 @@ def batch_analyze(student_ids: List[str], data_file: str = "./data/student_data.
         pct = (count / len(results) * 100) if results else 0
         emoji = get_risk_level_emoji(level)
         print(f"  {emoji} {level:10s}: {count:2d} ({pct:5.1f}%)")
-    print(f"{'='*80}\n")
+    print(('='*80) + "\n")
 
 
 def export_reports(output_dir: str = "./output", format: str = "all"):
     """Export comprehensive reports."""
     
-    print(f"\n{'='*80}")
-    print(f"AGENT AURA - EXPORT REPORTS")
-    print(f"{'='*80}\n")
+    print("\n" + ('='*80))
+    print("AGENT AURA - EXPORT REPORTS")
+    print(('='*80) + "\n")
     
     os.makedirs(output_dir, exist_ok=True)
     
@@ -201,9 +196,9 @@ def export_reports(output_dir: str = "./output", format: str = "all"):
             print(f"[OK] JSON report: {result['json_report']}")
             print(f"[OK] CSV report: {result['csv_report']}")
     
-    print(f"\n{'='*80}")
-    print(f"✅ EXPORT COMPLETE")
-    print(f"{'='*80}\n")
+    print("\n" + ('='*80))
+    print("✅ EXPORT COMPLETE")
+    print(('='*80) + "\n")
 
 
 def main():

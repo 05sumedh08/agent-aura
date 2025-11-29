@@ -1,18 +1,20 @@
 import os
 import logging
 import asyncio
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, List
 from dataclasses import dataclass
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
+ 
 @dataclass
 class ModelConfig:
     provider: str
     model_name: str
     api_key_env: str
 
+ 
 class ModelManager:
     """
     Manages interactions with various LLM providers and handles fallback logic.
@@ -68,7 +70,10 @@ class ModelManager:
 
     async def _call_gemini(self, model_name: str, prompt: str) -> str:
         import google.generativeai as genai
-        api_key = os.getenv("GEMINI_API_KEY")
+        from app.config import get_settings
+        settings = get_settings()
+        
+        api_key = settings.GEMINI_API_KEY
         if not api_key:
             raise ValueError("GEMINI_API_KEY not set")
         
@@ -79,7 +84,10 @@ class ModelManager:
 
     async def _call_openai(self, model_name: str, prompt: str) -> str:
         from openai import AsyncOpenAI
-        api_key = os.getenv("OPENAI_API_KEY")
+        from app.config import get_settings
+        settings = get_settings()
+        
+        api_key = settings.OPENAI_API_KEY
         if not api_key:
             raise ValueError("OPENAI_API_KEY not set")
             
@@ -92,7 +100,10 @@ class ModelManager:
 
     async def _call_anthropic(self, model_name: str, prompt: str) -> str:
         from anthropic import AsyncAnthropic
-        api_key = os.getenv("ANTHROPIC_API_KEY")
+        from app.config import get_settings
+        settings = get_settings()
+        
+        api_key = settings.ANTHROPIC_API_KEY
         if not api_key:
             raise ValueError("ANTHROPIC_API_KEY not set")
             
@@ -106,7 +117,10 @@ class ModelManager:
 
     async def _call_perplexity(self, model_name: str, prompt: str) -> str:
         from openai import AsyncOpenAI
-        api_key = os.getenv("PERPLEXITY_API_KEY")
+        from app.config import get_settings
+        settings = get_settings()
+        
+        api_key = settings.PERPLEXITY_API_KEY
         if not api_key:
             raise ValueError("PERPLEXITY_API_KEY not set")
             
@@ -118,5 +132,6 @@ class ModelManager:
         )
         return response.choices[0].message.content
 
+ 
 # Global instance
 model_manager = ModelManager()

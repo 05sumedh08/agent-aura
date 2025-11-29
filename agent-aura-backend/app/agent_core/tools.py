@@ -10,7 +10,7 @@ notifications, and progress tracking.
 import json
 import csv
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 import pandas as pd
 
 
@@ -32,6 +32,7 @@ class RiskThresholds:
 # ============================================================================
 
 from pathlib import Path
+
 
 def get_student_data(student_id: str, data_source: str = None):
     """
@@ -541,9 +542,13 @@ For questions, please contact your school's academic support team.
     return email_record
 
 
-def track_student_progress(student_id: str, risk_level: str, risk_score: float, 
-                          student_name: str = "", 
-                          notes: str = ""):
+def track_student_progress(
+    student_id: str,
+    risk_level: str,
+    risk_score: float,
+    student_name: str = "",
+    notes: str = ""
+):
     """
     Tool 6 (NEW): Track and monitor student progress over time.
     

@@ -6,9 +6,9 @@ import os
 import time
 import logging
 from typing import Callable, Optional
-from fastapi import Request, Response, HTTPException, status
+from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 import redis.asyncio as redis

@@ -6,7 +6,6 @@ Integration tests for Agent Aura multi-agent system.
 Tests the complete workflow from data collection to outcome prediction.
 """
 
-import pytest
 import sys
 import os
 
@@ -62,7 +61,7 @@ class TestIntegration:
         # Step 5: Generate Notification (if HIGH/CRITICAL)
         if risk_analysis["risk_level"] in ["HIGH", "CRITICAL"]:
             email = generate_alert_email("S001")
-            assert email["email_generated"] == True
+            assert email["email_generated"] is True
             assert "subject" in email
             assert "body" in email
         
@@ -73,7 +72,7 @@ class TestIntegration:
             float(risk_analysis["risk_score"]),
             student_data["name"]
         )
-        assert progress["tracking_success"] == True
+        assert progress["tracking_success"] is True
         assert progress["student_id"] == student_data["student_id"]
         
         print("[OK] Complete workflow test passed!")
@@ -109,7 +108,7 @@ class TestIntegration:
             })
         
         assert len(results) == len(student_ids)
-        assert all(r["tracking"] for r in results)
+        assert all(r["tracking"] is True for r in results)
         
         print(f"[OK] Batch processing test passed! Processed {len(results)} students")
     

@@ -1,0 +1,8 @@
+version: 1
+rules:
+  ignore:
+    # ecdsa side-channel advisories (non-actionable in pure Python; not used for private-key ops here)
+    - id: 64459
+      reason: "python-ecdsa Minerva side-channel; project does not perform private-key operations"
+    - id: 64396
+      reason: "python-ecdsa general side-channel note; not applicable to our usage"

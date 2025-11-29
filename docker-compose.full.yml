@@ -78,6 +78,38 @@ services:
       - agent-aura-network
     restart: unless-stopped
 
+  # ============================================================================
+  # Prometheus Monitoring
+  # ============================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: agent-aura-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - agent-aura-network
+
+  # ============================================================================
+  # Grafana Dashboard
+  # ============================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: agent-aura-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - agent-aura-network
+
 networks:
   agent-aura-network:
     driver: bridge
@@ -85,3 +117,5 @@ networks:
 volumes:
   postgres-data:
     driver: local
+  prometheus-data:
+  grafana-data:

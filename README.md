@@ -2,7 +2,7 @@
 
 **Enterprise Multi-Agent AI System for K-12 Student Intervention**
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-14.0-black.svg)](https://nextjs.org/)
@@ -11,6 +11,52 @@
 
 > **Full-Stack Multi-Agent System with Enterprise Features**  
 > 🚀 Multi-agent orchestration | 📊 Real-time analytics | 🔒 Production security | 🌐 Chrome extension integration
+
+---
+
+## 🎬 Demo - See It In Action!
+
+### 📹 Live Application Demo
+
+![Application Demo](docs/images/demo_video.webp)
+
+*Watch the full demo: Login → Dashboard → Agent Analysis → Real-time Results*
+
+### 📸 Screenshots
+
+#### Landing Page with Premium UI
+![Landing Page](docs/images/landing_page.png)
+*Modern glassmorphism design with enhanced depth and clarity*
+
+#### Admin Dashboard
+![Admin Dashboard](docs/images/admin_dashboard.png)
+*Comprehensive control panel with multi-agent analytics*
+
+#### Agent Analysis in Real-Time
+![Agent Analysis](docs/images/agent_analysis.png)
+*Live glass-box trajectory showing agent reasoning and decision-making*
+
+### 🚀 Quick Start (60 Seconds)
+
+```powershell
+# 1. Start the application (installs dependencies automatically)
+.\START_ALL_FIXED.ps1
+
+# 2. Open browser to http://localhost:3000
+
+# 3. Login with demo credentials:
+#    Username: admin
+#    Password: admin123
+
+# 4. Navigate to Admin > Agent and analyze a student!
+```
+
+**That's it!** 🎉 The application will:
+- ✅ Install missing dependencies (prometheus-client, reportlab)
+- ✅ Initialize database with 30 demo students
+- ✅ Start backend API on port 8000
+- ✅ Start frontend on port 3000
+- ✅ Open with premium glassmorphism UI
 
 ---
 
@@ -26,6 +72,7 @@
 - [Full-Stack Application](#-full-stack-application)
 - [Chrome Extension](#-chrome-extension)
 - [Production Deployment](#-production-deployment)
+ - [Monitoring](#-monitoring)
 - [Project Structure](#-project-structure)
 - [Configuration](#-configuration)
 - [Testing](#-testing)
@@ -34,7 +81,19 @@
 
 ---
 
-## 🎯 Overview
+## 🤝 Contributing
+
+We welcome contributions to Agent Aura! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to get started.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 **Agent Aura** is an enterprise-grade, full-stack multi-agent AI system that transforms K-12 education through intelligent student support. Built with FastAPI, Next.js, and PostgreSQL, it features real-time analytics dashboards, automated notifications, and seamless integration with existing school management systems via Chrome extension.
 
@@ -95,6 +154,62 @@
 - **Monitoring** - Sentry integration for error tracking
 - **Backups** - Automated daily database backups
 
+## Monitoring
+
+Agent Aura includes a complete monitoring stack with Prometheus and Grafana for real-time observability.
+
+### Quick Start
+
+Start the full monitoring stack:
+
+```pwsh
+docker compose -f docker-compose.full.yml up -d
+```
+
+**Access Points:**
+- Backend API: `http://localhost:8000`
+- Prometheus UI: `http://localhost:9090`
+- Grafana Dashboard: `http://localhost:3001` (login: admin/admin)
+- Metrics Endpoint: `http://localhost:8000/metrics`
+
+### Grafana Setup
+
+The Prometheus datasource is auto-configured via provisioning. To import the pre-built dashboard:
+
+1. Open Grafana at `http://localhost:3001`
+2. Navigate to **Dashboards → Import**
+3. Upload `monitoring/grafana-dashboard.json`
+
+**Dashboard Panels:**
+- Request Count by Endpoint
+- Agent Invocations by Status (completed/mock/error)
+- Analysis Latency (p50/p90/p99 percentiles)
+
+### Metrics Available
+
+The backend `/metrics` endpoint exposes:
+- `agent_aura_request_count` - Total API requests per endpoint
+- `agent_aura_agent_invocations_total` - Agent invocations by status
+- `agent_aura_analysis_latency_seconds` - Analysis duration histogram
+
+### Health Checks
+
+Verify services are running:
+
+```pwsh
+# Backend health
+Invoke-WebRequest -Uri http://localhost:8000/health
+
+# Prometheus metrics
+Invoke-WebRequest -Uri http://localhost:8000/metrics
+
+# Prometheus targets (should show backend UP)
+Invoke-WebRequest -Uri http://localhost:9090/api/v1/targets
+```
+
+### Configuration
+
+Prometheus scrapes backend metrics every 15 seconds (configured in `monitoring/prometheus.yml`). Grafana datasource provisioning is automatic via `monitoring/grafana/provisioning/datasources/datasource.yml`.
 ---
 
 ## 🎓 Problem Statement
@@ -1204,6 +1319,17 @@ df -h
 - Increase server resources
 
 For complete deployment guide, see [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md)
+
+## 📈 Monitoring
+
+- Metrics endpoint: backend exposes `http://localhost:8000/metrics` (Prometheus format).
+- Docker Compose (full) includes Prometheus and Grafana services.
+- Quick start:
+    - `docker-compose -f docker-compose.full.yml up -d`
+    - Prometheus UI: `http://localhost:9090`
+    - Grafana UI: `http://localhost:3001` (default admin password: `admin` or `${GRAFANA_PASSWORD}`).
+- Scrape target configured at `monitoring/prometheus.yml` -> `backend:8000/metrics`.
+- Suggested Grafana panels: request count, agent invocations by status, analysis latency histogram.
 
 ## 🧪 Testing
 

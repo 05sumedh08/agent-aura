@@ -240,15 +240,10 @@ class ProgressRecord(Base):
 # ============================================================================
 
 def get_database_url():
-    """Get database URL from environment."""
-    import os
-    # Use PostgreSQL by default when set via env var. For local dev and tests
-    # allow falling back to a local SQLite file so users can run the backend
-    # without installing or configuring Postgres.
-    return os.getenv(
-        "DATABASE_URL",
-        "sqlite:///./agent_aura_local.db"
-    )
+    """Get database URL from settings."""
+    from app.config import get_settings
+    settings = get_settings()
+    return settings.DATABASE_URL
 
 
 def create_database_engine():

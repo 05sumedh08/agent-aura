@@ -10,7 +10,7 @@ notifications, and progress tracking.
 import json
 import csv
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 import pandas as pd
 
 
@@ -144,13 +144,15 @@ def analyze_student_risk(student_id: str):
     
     # Cap score at 1.0
     score = min(score, 1.0)
+    # Normalize for threshold comparison to avoid floating point edge cases
+    normalized_score = round(score, 3)
     
     # Determine risk level
-    if score >= RiskThresholds.CRITICAL:
+    if normalized_score >= RiskThresholds.CRITICAL:
         level = "CRITICAL"
-    elif score >= RiskThresholds.HIGH:
+    elif normalized_score >= RiskThresholds.HIGH:
         level = "HIGH"
-    elif score >= RiskThresholds.MODERATE:
+    elif normalized_score >= RiskThresholds.MODERATE:
         level = "MODERATE"
     else:
         level = "LOW"
@@ -543,9 +545,16 @@ For questions, please contact your school's academic support team.
     return email_record
 
 
-def track_student_progress(student_id: str, risk_level: str, risk_score: float, 
-                          student_name: str = "", 
-                          notes: str = ""):
+from typing import Union, Dict, Any
+
+
+def track_student_progress(
+    student_id: str,
+    risk_level: str,
+    risk_score: Union[float, str],
+    student_name: str = "",
+    notes: str = ""
+) -> Dict[str, Any]:
     """
     Tool 6 (NEW): Track and monitor student progress over time.
     
@@ -571,11 +580,17 @@ def track_student_progress(student_id: str, risk_level: str, risk_score: float,
         }
     
     # Create progress entry
+    # Ensure numeric type for risk_score
+    try:
+        numeric_score = float(risk_score)
+    except (TypeError, ValueError):
+        numeric_score = 0.0
+
     progress_entry = {
         "date": datetime.now().isoformat().split('T')[0],
         "timestamp": datetime.now().isoformat(),
         "risk_level": risk_level,
-        "risk_score": risk_score,
+        "risk_score": numeric_score,
         "notes": notes
     }
     
@@ -589,12 +604,12 @@ def track_student_progress(student_id: str, risk_level: str, risk_score: float,
     
     if total_entries > 1:
         # Get first and last scores
-        first_score = history[0]["risk_score"]
-        current_score = history[-1]["risk_score"]
+        first_score = float(history[0]["risk_score"]) if history[0]["risk_score"] is not None else 0.0
+        current_score = float(history[-1]["risk_score"]) if history[-1]["risk_score"] is not None else 0.0
         
         # Calculate improvement
         score_change = first_score - current_score
-        improvement_pct = (score_change / first_score * 100) if first_score > 0 else 0
+        improvement_pct = (score_change / first_score * 100) if first_score > 0 else 0.0
         
         # Determine trend
         if score_change > 0.05:
@@ -622,7 +637,7 @@ def track_student_progress(student_id: str, risk_level: str, risk_score: float,
         "student_id": student_id,
         "student_name": student_name,
         "current_risk_level": risk_level,
-        "current_risk_score": risk_score,
+        "current_risk_score": numeric_score,
         "total_entries": total_entries,
         "days_tracked": days_tracked,
         "improvement_percentage": round(improvement_pct, 1),
@@ -655,7 +670,7 @@ def get_student_progress_timeline(student_id: str):
     
     # Calculate statistics
     if history:
-        risk_scores = [entry["risk_score"] for entry in history]
+        risk_scores = [float(entry["risk_score"]) for entry in history]
         avg_risk_score = sum(risk_scores) / len(risk_scores)
         min_risk_score = min(risk_scores)
         max_risk_score = max(risk_scores)
