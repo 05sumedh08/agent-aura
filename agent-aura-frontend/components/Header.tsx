@@ -4,6 +4,8 @@ import { User, LogOut, Menu } from 'lucide-react';
 import { useAuth } from '@/lib/store';
 import { apiClient } from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import VoiceInput from './VoiceInput';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -12,11 +14,22 @@ interface HeaderProps {
 export default function Header({ onMenuClick }: HeaderProps) {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const [voiceResponse, setVoiceResponse] = useState<string | null>(null);
 
   const handleLogout = async () => {
     await apiClient.logout();
     logout();
     router.push('/login');
+  };
+
+  const handleVoiceResponse = (text: string, data: any) => {
+    setVoiceResponse(text);
+    // Clear message after 5 seconds
+    setTimeout(() => setVoiceResponse(null), 5000);
+
+    if (data && data.student_id) {
+      console.log("Found student:", data);
+    }
   };
 
   const getRoleBadgeColor = () => {
@@ -63,7 +76,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
                 </svg>
               </div>
               <div>
-              <div>
                 <h1 className="text-2xl font-extrabold text-white tracking-tight">
                   Agent Aura
                 </h1>
@@ -73,11 +85,20 @@ export default function Header({ onMenuClick }: HeaderProps) {
               </div>
             </div>
           </div>
-          </div>
 
           {/* Right: User Info */}
           {user && (
             <div className="flex items-center gap-4">
+              {/* Voice Assistant */}
+              <div className="flex items-center mr-2">
+                <VoiceInput onResponse={handleVoiceResponse} />
+                {voiceResponse && (
+                  <div className="hidden md:block ml-3 bg-indigo-900/80 text-indigo-100 px-3 py-1 rounded-full text-sm border border-indigo-700 animate-fade-in max-w-xs truncate">
+                    {voiceResponse}
+                  </div>
+                )}
+              </div>
+
               <div className="text-right hidden sm:block">
                 <p className="text-base font-extrabold text-white">
                   {user.profile?.full_name || user.username}

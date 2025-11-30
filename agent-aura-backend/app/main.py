@@ -365,6 +365,85 @@ async def get_student_detail(
     }
 
 
+@app.post("/api/v1/voice/query")
+async def voice_query(
+    query: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Handle natural language voice queries about students.
+    
+    Args:
+        query: Dictionary containing 'text' field with the transcribed query.
+        
+    Returns:
+        Dictionary with 'response_text', 'data', and optional 'audio_base64'.
+    """
+    text = query.get("text", "").lower()
+    
+    # Simple regex-based intent matching for demo purposes
+    # In a real app, this would use an LLM or NLU service
+    import re
+    from app.services.voice import ElevenLabsService
+    
+    # Intent: "How is [Student Name] doing?"
+    match = re.search(r"how is (.+?) doing", text)
+    if match:
+        student_name = match.group(1)
+        # Find student by name (fuzzy match or exact)
+        student = db.query(Student).filter(Student.full_name.ilike(f"%{student_name}%")).first()
+        
+        if student:
+            # Get latest risk
+            latest_risk = db.query(RiskAssessment).filter(
+                RiskAssessment.student_id == student.id
+            ).order_by(RiskAssessment.assessed_at.desc()).first()
+            
+            risk_level = latest_risk.risk_level.value if latest_risk else "Unknown"
+            gpa = student.gpa
+            
+            response_text = f"{student.full_name} is currently at {risk_level} risk level with a GPA of {gpa}. "
+            if risk_level in ["CRITICAL", "HIGH"]:
+                response_text += "Immediate attention is recommended."
+            else:
+                response_text += "They are performing well."
+            
+            # Generate Audio with ElevenLabs
+            voice_service = ElevenLabsService()
+            audio_base64 = voice_service.generate_audio(response_text)
+                
+            return {
+                "response_text": response_text,
+                "audio_base64": audio_base64,
+                "data": {
+                    "student_id": student.student_id,
+                    "name": student.full_name,
+                    "risk_level": risk_level
+                }
+            }
+        else:
+            response_text = f"I couldn't find a student named {student_name}."
+            voice_service = ElevenLabsService()
+            audio_base64 = voice_service.generate_audio(response_text)
+            
+            return {
+                "response_text": response_text,
+                "audio_base64": audio_base64,
+                "data": None
+            }
+            
+    response_text = "I'm sorry, I didn't understand that query. You can ask 'How is John Doe doing?'."
+    voice_service = ElevenLabsService()
+    audio_base64 = voice_service.generate_audio(response_text)
+    
+    return {
+        "response_text": response_text,
+        "audio_base64": audio_base64,
+        "data": None
+    }
+
+
 # ============================================================================
 # Agent Interaction Endpoint (Core Feature)
 # ============================================================================

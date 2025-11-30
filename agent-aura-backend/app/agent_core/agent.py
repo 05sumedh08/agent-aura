@@ -29,7 +29,11 @@ from app.agent_core.tools import (
     generate_alert_email,
     track_student_progress,
     get_student_progress_timeline,
-    export_progress_visualization_data
+    track_student_progress,
+    get_student_progress_timeline,
+    export_progress_visualization_data,
+    fetch_lms_data,
+    predict_risk_trends
 )
 
 
@@ -127,6 +131,16 @@ TOOL_REGISTRY = {
         "function": export_progress_visualization_data,
         "description": "Export progress data for visualization",
         "parameters": ["student_id", "format"]
+    },
+    "fetch_lms_data": {
+        "function": fetch_lms_data,
+        "description": "Fetch live student data from LMS",
+        "parameters": ["student_id", "platform"]
+    },
+    "predict_risk_trends": {
+        "function": predict_risk_trends,
+        "description": "Predict future risk trends based on history",
+        "parameters": ["student_id"]
     }
 }
 

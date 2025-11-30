@@ -404,6 +404,91 @@ def predict_intervention_success(risk_level: str):
 # ENHANCED TOOLS (5-8) - NEW Functionality
 # ============================================================================
 
+from app.services.lms import LMSFactory
+
+def fetch_lms_data(student_id: str, platform: str):
+    """
+    Tool 9 (NEW): Fetch live student data from LMS (Canvas/Google Classroom).
+    
+    Args:
+        student_id: Student identifier
+        platform: LMS platform name ('canvas' or 'google_classroom')
+        
+    Returns:
+        Dictionary with LMS data
+    """
+    try:
+        provider = LMSFactory.get_provider(platform)
+        student_data = provider.get_student_data(student_id)
+        assignments = provider.get_assignments(student_id)
+        
+        return {
+            "student_id": student_id,
+            "platform": platform,
+            "data": student_data,
+            "recent_assignments": assignments,
+            "status": "success"
+        }
+    except Exception as e:
+        return {
+            "error": str(e),
+            "status": "error"
+        }
+
+def predict_risk_trends(student_id: str):
+    """
+    Tool 10 (NEW): Predict future risk trends based on historical data.
+    
+    Args:
+        student_id: Student identifier
+        
+    Returns:
+        Dictionary with risk prediction analysis
+    """
+    # Mock prediction logic based on progress history
+    if student_id not in progress_database:
+        return {
+            "prediction": "Insufficient data for prediction",
+            "confidence": "Low",
+            "trend": "Unknown",
+            "status": "no_data"
+        }
+        
+    history = progress_database[student_id]["history"]
+    if len(history) < 2:
+        return {
+            "prediction": "Need more data points for accurate prediction",
+            "confidence": "Low",
+            "trend": "Stable",
+            "status": "insufficient_data"
+        }
+        
+    # Simple trend analysis
+    recent_scores = [entry["risk_score"] for entry in history[-5:]]
+    avg_score = sum(recent_scores) / len(recent_scores)
+    
+    if recent_scores[-1] > recent_scores[0]:
+        trend = "Increasing Risk"
+        prediction = "Risk level likely to escalate if no intervention"
+    elif recent_scores[-1] < recent_scores[0]:
+        trend = "Decreasing Risk"
+        prediction = "Student is responding well to interventions"
+    else:
+        trend = "Stable"
+        prediction = "Risk level remains constant"
+        
+    return {
+        "student_id": student_id,
+        "predicted_trend": trend,
+        "prediction_summary": prediction,
+        "confidence_score": 0.85,
+        "next_month_projection": {
+            "projected_risk_score": round(avg_score, 3),
+            "risk_level": "HIGH" if avg_score >= 0.8 else "MODERATE" if avg_score >= 0.6 else "LOW"
+        },
+        "status": "success"
+    }
+
 def generate_alert_email(student_data: dict, risk_analysis: dict):
     """
     Tool 5 (NEW): Generate professional email notifications for parents/teachers.
