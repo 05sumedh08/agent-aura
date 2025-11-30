@@ -7,7 +7,11 @@ class Settings(BaseSettings):
     # App Config
     APP_NAME: str = "Agent Aura API"
     APP_VERSION: str = "2.0.0"
+    ENV: str = "development"
     DEBUG: bool = False
+    
+    # CORS
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:3001"
     
     # Database
     DATABASE_URL: str = "sqlite:///./agent_aura_local.db"
