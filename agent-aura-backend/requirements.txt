@@ -1,0 +1,31 @@
+# Agent Aura Backend Requirements
+# Core Framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.6
+
+# Database
+sqlalchemy>=2.0.25
+psycopg2-binary>=2.9.9  # Required for PostgreSQL on Render
+
+# Environment & Config
+python-dotenv>=1.0.0
+pydantic>=2.5.3
+pydantic-settings>=2.1.0
+
+# AI & Machine Learning
+google-generativeai>=0.3.2
+elevenlabs>=0.2.27
+numpy>=1.26.3
+pandas>=2.2.0
+scikit-learn>=1.4.0
+
+# Utilities
+reportlab>=4.0.9  # For PDF generation
+prometheus_client>=0.19.0  # For metrics
+requests>=2.31.0
+aiofiles>=23.2.1
+uuid>=1.30
+deprecated>=1.2.14
+tabulate>=0.9.0
+tqdm>=4.66.1
