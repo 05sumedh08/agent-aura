@@ -63,9 +63,15 @@ ANALYSIS_LATENCY = Histogram('agent_aura_analysis_latency_seconds', 'Latency of 
 
 
 # CORS middleware - Allow frontend to access backend
+origins = settings.ALLOWED_ORIGINS.split(",")
+# Explicitly add production domains to ensure they work even if env vars override config
+origins.extend(["https://agent-aura-sandy.vercel.app", "https://agent-aura.vercel.app"])
+# Remove duplicates
+origins = list(set(origins))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS.split(","),
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],

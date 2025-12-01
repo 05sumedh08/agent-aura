@@ -6,7 +6,7 @@ from typing import Optional
 class Settings(BaseSettings):
     # App Config
     APP_NAME: str = "Agent Aura API"
-    APP_VERSION: str = "2.0.0"
+    APP_VERSION: str = "2.0.1"
     ENV: str = "development"
     DEBUG: bool = False
     
