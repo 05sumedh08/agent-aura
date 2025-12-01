@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     
     # CORS
-    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:3001"
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:3001,https://agent-aura-sandy.vercel.app,https://agent-aura.vercel.app"
     
     # Database
     DATABASE_URL: str = "sqlite:///./agent_aura_local.db"
